@@ -54,7 +54,7 @@ Follow this steps to upload the App to your Android tablet.
 From the command line:
 
 1. Enter `cd <your app dir>`
-2. Run `flutter build apk --no-shrink`
+2. Run `flutter build apk --release`
 3. Run `flutter install`
 
 

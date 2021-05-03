@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Quicksand',
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        initialRoute: IntroScreen.routeName,
+        initialRoute: StartScreen.routeName,
         routes: {
           IntroScreen.routeName: (context) => IntroScreen(),
           StartScreen.routeName: (context) => StartScreen(),

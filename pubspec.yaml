@@ -29,7 +29,6 @@ dependencies:
   mp_chart: ^0.3.1
   flutter_colorpicker: ^0.4.0
   path_provider: ^1.6.27
-  flutter_launcher_icons: ^0.9.0
   sqflite: ^2.0.0+2
   path: ^1.8.0
   intl: ^0.17.0
@@ -46,10 +45,16 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.0
 
 flutter_icons:
+  #android: true
+  #ios: true
   android: "launcher_icon"
-  image_path: "assets/images/icon.png"
+  image_path: "dev_assets/icon.png"
+  #adaptive_icon_background: "#191919"
+  #adaptive_icon_foreground: "dev_assets/..."
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
