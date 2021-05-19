@@ -129,7 +129,9 @@ class UserItem extends StatelessWidget {
                         user.fingerSensorLowerRange.toString()),
                     _buildUserInfo(
                         AppLocalizations.of(context).positiveFeedback,
-                        (user.isPositiveFeedback == 1) ? 'yes' : 'no'),
+                        (user.isPositiveFeedback == 1)
+                            ? AppLocalizations.of(context).yes
+                            : AppLocalizations.of(context).no),
                   ],
                 ),
               ),

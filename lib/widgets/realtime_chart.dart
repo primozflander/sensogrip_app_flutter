@@ -515,7 +515,8 @@ class RealtimeChartState extends State<RealtimeChart>
   }
 
   LineDataSet _createTipMaxSet() {
-    LineDataSet set = LineDataSet(null, "Tp+");
+    LineDataSet set =
+        LineDataSet(null, AppLocalizations.of(context).tipPressureUpperRangeC);
     set.setAxisDependency(AxisDependency.LEFT);
     set.setColor1(Colors.yellow[400]);
     set.setLineWidth(0.5);
@@ -525,7 +526,8 @@ class RealtimeChartState extends State<RealtimeChart>
   }
 
   LineDataSet _createTipMinSet() {
-    LineDataSet set = LineDataSet(null, "Tp-");
+    LineDataSet set =
+        LineDataSet(null, AppLocalizations.of(context).tipPressureLowerRangeC);
     set.setAxisDependency(AxisDependency.LEFT);
     set.setColor1(Colors.yellow[200]);
     set.setLineWidth(0.5);
@@ -535,7 +537,8 @@ class RealtimeChartState extends State<RealtimeChart>
   }
 
   LineDataSet _createFingerMaxSet() {
-    LineDataSet set = LineDataSet(null, "Fp+");
+    LineDataSet set = LineDataSet(
+        null, AppLocalizations.of(context).fingerPressureUpperRangeC);
     set.setAxisDependency(AxisDependency.LEFT);
     set.setColor1(Colors.orange[300]);
     set.setLineWidth(0.5);
@@ -545,7 +548,8 @@ class RealtimeChartState extends State<RealtimeChart>
   }
 
   LineDataSet _createFingerMinSet() {
-    LineDataSet set = LineDataSet(null, "Fp-");
+    LineDataSet set = LineDataSet(
+        null, AppLocalizations.of(context).fingerPressureLowerRangeC);
     set.setAxisDependency(AxisDependency.LEFT);
     set.setColor1(Colors.orange[200]);
     set.setLineWidth(0.5);

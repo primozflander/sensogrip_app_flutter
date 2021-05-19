@@ -73,9 +73,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                 color: Colors.black,
               ),
             ),
-            content: Text(AppLocalizations.of(context).user +
-                ' ${user.name} ' +
-                AppLocalizations.of(context).deleteProfileQ),
+            content: Text(AppLocalizations.of(context).deleteProfileQ),
             actions: <Widget>[
               TextButton(
                   onPressed: () => Navigator.of(context).pop(false),

@@ -32,7 +32,7 @@
     "user": "User",
     "created": "created",
     "deleteUser": "Delete user",
-    "deleteProfileQ": "will be deleted. Delete?",
+    "deleteProfileQ": "User will be deleted. Delete?",
     "yes": "Yes",
     "no": "No",
     "feedbackType": "Feedback type",
@@ -94,6 +94,10 @@
     "noStream": "Press play to view live data!",
     "angle": "Angle",
     "speed": "Speed",
+    "tipPressureUpperRangeC": "Tp+",
+    "tipPressureLowerRangeC": "Tp-",
+    "fingerPressureUpperRangeC": "Fp+",
+    "fingerPressureLowerRangeC": "Fp-",
     "recording": "Recording...",
     "tipSensorLetter": "T",
     "fingerSensorLetter": "F",
@@ -102,5 +106,9 @@
     "tipSensorRange": "Tip sensor range",
     "fingerSensorRange": "Finger sensor range",
     "back": "Back",
-    "userManual": "User Manual"
+    "userManual": "User Manual",
+    "transferToCloudN": "Data transfered to cloud",
+    "deleteCloudDataN": "Data deleted from the cloud",
+    "appVersion": "App version",
+    "deviceId": "Device id"
 }

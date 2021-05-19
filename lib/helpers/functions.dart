@@ -1,10 +1,23 @@
 import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:device_info/device_info.dart';
 
 class Functions {
+  static Future<String> getDeviceId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.identifierForVendor;
+    } else {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.androidId;
+    }
+  }
+
   static List<int> convertIntToBytes(int value) {
     int byte1 = value & 0xff;
     int byte2 = (value >> 8) & 0xff;

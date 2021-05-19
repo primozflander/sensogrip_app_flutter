@@ -402,13 +402,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   FeedbackType.noFeedback,
                                 ),
                                 _buildRadioButton(
+                                  AppLocalizations.of(context).simpleFeedback,
+                                  FeedbackType.simpleFeedback,
+                                ),
+                                _buildRadioButton(
                                   AppLocalizations.of(context)
                                       .bothSensorsInRange,
                                   FeedbackType.bothSensorsInRange,
-                                ),
-                                _buildRadioButton(
-                                  AppLocalizations.of(context).simpleFeedback,
-                                  FeedbackType.simpleFeedback,
                                 ),
                                 _buildRadioButton(
                                   AppLocalizations.of(context).advancedFeedback,

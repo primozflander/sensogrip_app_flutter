@@ -7,6 +7,8 @@ import '../providers/users_provider.dart';
 import '../models/text_styles.dart';
 import '../models/data.dart';
 import '../helpers/sql_helper.dart';
+import '../helpers/firebase_cloud_helper.dart';
+import '../helpers/functions.dart';
 
 enum FilteredOptions {
   CurrentUser,
@@ -26,6 +28,21 @@ class DataSelectionScreen extends StatefulWidget {
 class _DataSelectionScreenState extends State<DataSelectionScreen> {
   List<Data> _data = [];
   List<Data> _filteredData = [];
+  bool _isLoading = false;
+
+  Future<void> _startTransferToCLoud() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final String deviceId = await Functions.getDeviceId();
+    print('device id: $deviceId');
+    await FirebaseCloudHelper.transferDataListToCloud(deviceId, _data);
+    setState(() {
+      _isLoading = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).transferToCloudN)));
+  }
 
   void _getDataFromDatabase() async {
     List<Data> dataFromDb = await SqlHelper.getData();
@@ -85,6 +102,16 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
           style: TextStyles.appBarTextStyle,
         ),
         actions: [
+          _isLoading
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.cloud_upload),
+                  //tooltip: 'Show Snackbar',
+                  onPressed: _startTransferToCLoud),
           PopupMenuButton(
             onSelected: (FilteredOptions selectedValue) {
               setState(

@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../models/text_styles.dart';
 import '../models/uuids.dart';
 import '../providers/ble_provider.dart';
+import '../helpers/functions.dart';
 
 class InfoScreen extends StatefulWidget {
   static const routeName = '/info_screen';
@@ -14,16 +15,30 @@ class InfoScreen extends StatefulWidget {
 }
 
 class _InfoScreenState extends State<InfoScreen> {
-  int secondsInUse;
-  int secondsInRange;
+  int _secondsInUse;
+  int _secondsInRange;
+  String _deviceId = 'bla';
 
   @override
   void initState() {
-    secondsInUse = Provider.of<BleProvider>(context, listen: false)
+    _secondsInUse = Provider.of<BleProvider>(context, listen: false)
         .findReceivedDataByName('secondsInUse');
-    secondsInRange = Provider.of<BleProvider>(context, listen: false)
+    _secondsInRange = Provider.of<BleProvider>(context, listen: false)
         .findReceivedDataByName('secondsInRange');
+    // _getId();
     super.initState();
+  }
+
+  // void _getId() async {
+  //   _deviceId = await Functions.getDeviceId();
+  //   setState(() {});
+  // }
+
+  @override
+  void didChangeDependencies() async {
+    _deviceId = await Functions.getDeviceId();
+    setState(() {});
+    super.didChangeDependencies();
   }
 
   @override
@@ -52,7 +67,7 @@ class _InfoScreenState extends State<InfoScreen> {
                     size: 26,
                   ),
                   title: Text(AppLocalizations.of(context).pencilUsage +
-                      ' $secondsInUse ' +
+                      ' $_secondsInUse ' +
                       AppLocalizations.of(context).seconds),
                   subtitle: Text(AppLocalizations.of(context).pencilUsageD),
                   trailing: ElevatedButton(
@@ -81,7 +96,7 @@ class _InfoScreenState extends State<InfoScreen> {
                                       Navigator.of(context).pop(true);
                                       print('counter reset');
                                       setState(() {
-                                        secondsInUse = 0;
+                                        _secondsInUse = 0;
                                       });
                                     },
                                     child:
@@ -103,7 +118,7 @@ class _InfoScreenState extends State<InfoScreen> {
                     size: 26,
                   ),
                   title: Text(AppLocalizations.of(context).pencilInRangeUsage +
-                      ' $secondsInRange ' +
+                      ' $_secondsInRange ' +
                       AppLocalizations.of(context).seconds),
                   subtitle:
                       Text(AppLocalizations.of(context).pencilInRangeUsageD),
@@ -133,7 +148,7 @@ class _InfoScreenState extends State<InfoScreen> {
                                       Navigator.of(context).pop(true);
                                       print('counter reset');
                                       setState(() {
-                                        secondsInRange = 0;
+                                        _secondsInRange = 0;
                                       });
                                     },
                                     child:
@@ -154,7 +169,16 @@ class _InfoScreenState extends State<InfoScreen> {
                     Icons.code,
                     size: 26,
                   ),
-                  title: Text('App version: 1.2.3'),
+                  title:
+                      Text(AppLocalizations.of(context).appVersion + ': 1.3.0'),
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.perm_device_info,
+                    size: 26,
+                  ),
+                  title: Text(
+                      AppLocalizations.of(context).deviceId + ': $_deviceId'),
                 ),
                 ListTile(
                   leading: Icon(

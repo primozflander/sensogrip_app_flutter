@@ -11,7 +11,7 @@ import './screens/profiles_screen.dart';
 import './screens/chart_screen.dart';
 import './screens/settings_screen.dart';
 import './screens/start_screen.dart';
-import './screens/intro_screen.dart';
+// import './screens/intro_screen.dart';
 import './screens/connect_to_device_screen.dart';
 import './screens/data_and_stats_screen.dart';
 import './screens/help_screen.dart';
@@ -50,8 +50,9 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         initialRoute: StartScreen.routeName,
+        // initialRoute: DataAndStatsScreen.routeName,
         routes: {
-          IntroScreen.routeName: (context) => IntroScreen(),
+          // IntroScreen.routeName: (context) => IntroScreen(),
           StartScreen.routeName: (context) => StartScreen(),
           ProfilesScreen.routeName: (context) => ProfilesScreen(),
           InfoScreen.routeName: (context) => InfoScreen(),
@@ -64,7 +65,7 @@ class MyApp extends StatelessWidget {
         },
         onUnknownRoute: (settings) {
           return MaterialPageRoute(
-            builder: (ctx) => ChartScreen(),
+            builder: (ctx) => StartScreen(),
           );
         },
       ),
