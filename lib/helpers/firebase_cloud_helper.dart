@@ -1,8 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:connectivity/connectivity.dart';
 
 import '../models/data.dart';
 
@@ -25,21 +24,28 @@ class FirebaseCloudHelper {
     }
   }
 
-  static Future<void> transferDataListToCloud(
+  static Future<bool> transferDataListToCloud(
       String user, List<Data> data) async {
-    await deleteCloudData(user);
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) return true;
+    final response = await deleteCloudData(user);
+    print('response from delete $response');
+    if (response == true) return true;
     data.forEach((element) {
       transferDataToCloud(user, element);
     });
+    return false;
   }
 
-  static Future<void> deleteCloudData(String user) async {
+  static Future<bool> deleteCloudData(String user) async {
     final url = 'https://sensogrip-default-rtdb.firebaseio.com/data/$user.json';
     try {
       final response = await http.delete(Uri.parse(url));
       if (response.statusCode >= 400) {
         print('Could not delete data');
+        return true;
       }
+      return false;
     } catch (error) {
       print(error);
       throw error;

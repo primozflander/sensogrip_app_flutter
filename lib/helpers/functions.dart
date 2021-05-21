@@ -86,6 +86,9 @@ class Functions {
       case FeedbackType.overpressureFeedback:
         output = 4;
         break;
+      case FeedbackType.negativeFeedback:
+        output = 5;
+        break;
     }
     return output;
   }
@@ -108,9 +111,38 @@ class Functions {
       case 4:
         output = FeedbackType.overpressureFeedback;
         break;
+      case 5:
+        output = FeedbackType.negativeFeedback;
+        break;
     }
     return output;
   }
+
+  // static String intToFeedbackString(int value) {
+  //   String output = "";
+  //   switch (value) {
+  //     case 0:
+  //       output = AppLocalizations.of(context)
+  //                                       .testProtocol;
+  //       break;
+  //     case 1:
+  //       output = FeedbackType.bothSensorsInRange;
+  //       break;
+  //     case 2:
+  //       output = FeedbackType.simpleFeedback;
+  //       break;
+  //     case 3:
+  //       output = FeedbackType.advancedFeedback;
+  //       break;
+  //     case 4:
+  //       output = FeedbackType.overpressureFeedback;
+  //       break;
+  //     case 4:
+  //       output = FeedbackType.overpressureFeedback;
+  //       break;
+  //   }
+  //   return output;
+  // }
 
   // static List<int> parseStream(List<int> dataFromDevice) {
   //   var data = ByteData.view(Uint8List.fromList(dataFromDevice).buffer);
@@ -337,4 +369,5 @@ enum FeedbackType {
   simpleFeedback,
   advancedFeedback,
   overpressureFeedback,
+  negativeFeedback,
 }

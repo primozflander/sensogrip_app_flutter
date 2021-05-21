@@ -80,7 +80,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _fingerSensorUpperRange = data.getInt16(4, Endian.little).clamp(0, 500);
     _fingerSensorLowerRange = data.getInt16(6, Endian.little).clamp(0, 500);
     _isPositiveFeedback = data.getInt16(8, Endian.little).clamp(0, 1);
-    _feedbackType = data.getInt16(10, Endian.little).clamp(0, 4);
+    _feedbackType = data.getInt16(10, Endian.little).clamp(0, 5);
     _isAIon = data.getInt16(12, Endian.little).clamp(0, 1);
     _isAngleCorrected = data.getInt16(14, Endian.little).clamp(0, 1);
     _tipPressureReleaseDelay = data.getInt16(16, Endian.little).clamp(0, 250);
@@ -170,7 +170,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Function updateValue,
   ) {
     return Container(
-      // width: 1200,
       child: SwitchListTile(
         contentPadding: EdgeInsets.symmetric(horizontal: 30),
         title: Text(
@@ -179,9 +178,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         subtitle: Text(
           description,
-          // style: TextStyle(
-          //   fontSize: 14,
-          // ),
         ),
         value: currentValue,
         onChanged: updateValue,
@@ -194,8 +190,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     FeedbackType value,
   ) {
     return Container(
-      padding: EdgeInsets.all(15),
-      // width: 200,
+      // padding: EdgeInsets.all(15),
+      margin: EdgeInsets.all(5),
+      width: 180,
+      // color: Colors.grey.shade200,
+      decoration: BoxDecoration(
+        // shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        color: Colors.grey.shade100,
+      ),
       child: Column(
         children: [
           Radio(
@@ -212,7 +215,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
           ),
-          Text(title),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );
@@ -220,6 +226,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isAdmin =
+        (Provider.of<UsersProvider>(context, listen: false).selectedUser.name ==
+            'alphaOmega');
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -234,7 +243,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             )
           : SingleChildScrollView(
               child: Container(
-                // width: 1000,
                 child: Column(
                   children: [
                     Card(
@@ -394,33 +402,104 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               AppLocalizations.of(context).feedbackType,
                               style: Theme.of(context).textTheme.bodyText1,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _buildRadioButton(
-                                  AppLocalizations.of(context).noFeedback,
-                                  FeedbackType.noFeedback,
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 10.0),
+                              height: 120.0,
+                              child: Center(
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  children: <Widget>[
+                                    _buildRadioButton(
+                                      AppLocalizations.of(context).noFeedback,
+                                      FeedbackType.noFeedback,
+                                    ),
+                                    _buildRadioButton(
+                                      AppLocalizations.of(context)
+                                          .simpleFeedback,
+                                      FeedbackType.simpleFeedback,
+                                    ),
+                                    _buildRadioButton(
+                                      AppLocalizations.of(context)
+                                          .bothSensorsInRange,
+                                      FeedbackType.bothSensorsInRange,
+                                    ),
+                                    _buildRadioButton(
+                                      AppLocalizations.of(context)
+                                          .advancedFeedback,
+                                      FeedbackType.advancedFeedback,
+                                    ),
+                                    _buildRadioButton(
+                                      AppLocalizations.of(context)
+                                          .overpressureFeedback,
+                                      FeedbackType.overpressureFeedback,
+                                    ),
+                                    _buildRadioButton(
+                                      AppLocalizations.of(context)
+                                          .negativeFeedback,
+                                      FeedbackType.negativeFeedback,
+                                    ),
+                                  ],
                                 ),
-                                _buildRadioButton(
-                                  AppLocalizations.of(context).simpleFeedback,
-                                  FeedbackType.simpleFeedback,
-                                ),
-                                _buildRadioButton(
-                                  AppLocalizations.of(context)
-                                      .bothSensorsInRange,
-                                  FeedbackType.bothSensorsInRange,
-                                ),
-                                _buildRadioButton(
-                                  AppLocalizations.of(context).advancedFeedback,
-                                  FeedbackType.advancedFeedback,
-                                ),
-                                _buildRadioButton(
-                                  AppLocalizations.of(context)
-                                      .overpressureFeedback,
-                                  FeedbackType.overpressureFeedback,
-                                ),
-                              ],
+                              ),
                             ),
+
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            //   children: [
+                            //     _buildRadioButton(
+                            //       AppLocalizations.of(context).noFeedback,
+                            //       FeedbackType.noFeedback,
+                            //     ),
+                            //     _buildRadioButton(
+                            //       AppLocalizations.of(context).simpleFeedback,
+                            //       FeedbackType.simpleFeedback,
+                            //     ),
+                            //     _buildRadioButton(
+                            //       AppLocalizations.of(context)
+                            //           .bothSensorsInRange,
+                            //       FeedbackType.bothSensorsInRange,
+                            //     ),
+                            //     _buildRadioButton(
+                            //       AppLocalizations.of(context).advancedFeedback,
+                            //       FeedbackType.advancedFeedback,
+                            //     ),
+                            //     _buildRadioButton(
+                            //       AppLocalizations.of(context)
+                            //           .overpressureFeedback,
+                            //       FeedbackType.overpressureFeedback,
+                            //     ),
+                            //   ],
+                            // ),
+                            // Container(
+                            //   margin: EdgeInsets.symmetric(vertical: 20.0),
+                            //   height: 100.0,
+                            //   child: ListView(
+                            //     scrollDirection: Axis.horizontal,
+                            //     children: <Widget>[
+                            //       Container(
+                            //         width: 300.0,
+                            //         color: Colors.redAccent,
+                            //       ),
+                            //       Container(
+                            //         width: 300.0,
+                            //         color: Colors.blue,
+                            //       ),
+                            //       Container(
+                            //         width: 300.0,
+                            //         color: Colors.green,
+                            //       ),
+                            //       Container(
+                            //         width: 300.0,
+                            //         color: Colors.yellow,
+                            //       ),
+                            //       Container(
+                            //         width: 300.0,
+                            //         color: Colors.orange,
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -435,34 +514,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         padding: EdgeInsets.all(20),
                         child: Column(
                           children: [
-                            _buildSwitchTile(
-                              AppLocalizations.of(context).positiveFeedback,
-                              AppLocalizations.of(context).positiveFeedbackD,
-                              _positiveFeedbackSwitch,
-                              (value) {
-                                setState(
-                                  () {
-                                    _positiveFeedbackSwitch = value;
-                                    _isPositiveFeedback = value ? 1 : 0;
-                                    _writeConfigurationState();
-                                  },
-                                );
-                              },
-                            ),
-                            // _buildSwitchTile(
-                            //   'Pencil angle correction?',
-                            //   'When turned on, sensor values will be angle compensated',
-                            //   _angleCorrectionSwitch,
-                            //   (value) {
-                            //     setState(
-                            //       () {
-                            //         _angleCorrectionSwitch = value;
-                            //         _isAngleCorrected = value ? 1 : 0;
-                            //         _writeConfigurationState();
-                            //       },
-                            //     );
-                            //   },
-                            // ),
+                            if (isAdmin)
+                              _buildSwitchTile(
+                                AppLocalizations.of(context).positiveFeedback,
+                                AppLocalizations.of(context).positiveFeedbackD,
+                                _positiveFeedbackSwitch,
+                                (value) {
+                                  setState(
+                                    () {
+                                      _positiveFeedbackSwitch = value;
+                                      _isPositiveFeedback = value ? 1 : 0;
+                                      _writeConfigurationState();
+                                    },
+                                  );
+                                },
+                              ),
+                            if (isAdmin)
+                              _buildSwitchTile(
+                                'Pencil angle correction?',
+                                'When turned on, sensor values will be angle compensated',
+                                _angleCorrectionSwitch,
+                                (value) {
+                                  setState(
+                                    () {
+                                      _angleCorrectionSwitch = value;
+                                      _isAngleCorrected = value ? 1 : 0;
+                                      _writeConfigurationState();
+                                    },
+                                  );
+                                },
+                              ),
                             _buildSwitchTile(
                               AppLocalizations.of(context).dynamicRange,
                               AppLocalizations.of(context).dynamicRangeD,
@@ -492,20 +573,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: EdgeInsets.all(20),
                           child: Column(
                             children: [
-                              CustomColorPicker(
-                                UniqueKey(),
-                                AppLocalizations.of(context)
-                                    .positiveFeedbackColor,
-                                _ledOkColor,
-                                _updateOkColor,
-                              ),
-                              CustomColorPicker(
-                                UniqueKey(),
-                                AppLocalizations.of(context)
-                                    .negativeFeedbackColor,
-                                _ledNokColor,
-                                _updateNokColor,
-                              ),
+                              if (_selectedFeedback !=
+                                  FeedbackType.negativeFeedback)
+                                CustomColorPicker(
+                                  UniqueKey(),
+                                  AppLocalizations.of(context)
+                                      .positiveFeedbackColor,
+                                  _ledOkColor,
+                                  _updateOkColor,
+                                ),
+                              if (_selectedFeedback ==
+                                      FeedbackType.negativeFeedback ||
+                                  _selectedFeedback ==
+                                      FeedbackType.overpressureFeedback)
+                                CustomColorPicker(
+                                  UniqueKey(),
+                                  AppLocalizations.of(context)
+                                      .negativeFeedbackColor,
+                                  _ledNokColor,
+                                  _updateNokColor,
+                                ),
                               if (_selectedFeedback ==
                                   FeedbackType.simpleFeedback)
                                 CustomColorPicker(

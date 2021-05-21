@@ -41,6 +41,7 @@
     "bothSensorsInRange": "Both sensors in range",
     "advancedFeedback": "Advanced feedback",
     "overpressureFeedback": "Overpressure feedback",
+    "negativeFeedback": "Negative feedback",
     "dynamicRange": "Adapt ranges dynamically?",
     "positiveFeedbackColor": "Positive feedback color",
     "negativeFeedbackColor": "Negative feedback color",
@@ -107,8 +108,9 @@
     "fingerSensorRange": "Finger sensor range",
     "back": "Back",
     "userManual": "User Manual",
-    "transferToCloudN": "Data transfered to cloud",
-    "deleteCloudDataN": "Data deleted from the cloud",
+    "transferToCloudN": "Data transfered to cloud.",
+    "deleteCloudDataN": "Data deleted from the cloud.",
     "appVersion": "App version",
-    "deviceId": "Device id"
+    "deviceId": "Device id",
+    "checkConnectionN": "Data not transfered to cloud. Please check internet connection."
 }

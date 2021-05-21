@@ -36,12 +36,17 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
     });
     final String deviceId = await Functions.getDeviceId();
     print('device id: $deviceId');
-    await FirebaseCloudHelper.transferDataListToCloud(deviceId, _data);
+    final response =
+        await FirebaseCloudHelper.transferDataListToCloud(deviceId, _data);
     setState(() {
       _isLoading = false;
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).transferToCloudN)));
+    print('response $response');
+    response
+        ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(AppLocalizations.of(context).checkConnectionN)))
+        : ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(AppLocalizations.of(context).transferToCloudN)));
   }
 
   void _getDataFromDatabase() async {
@@ -110,7 +115,6 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
                 )
               : IconButton(
                   icon: const Icon(Icons.cloud_upload),
-                  //tooltip: 'Show Snackbar',
                   onPressed: _startTransferToCLoud),
           PopupMenuButton(
             onSelected: (FilteredOptions selectedValue) {

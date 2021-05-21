@@ -53,6 +53,61 @@ class UserItem extends StatelessWidget {
       );
     }
 
+    Widget _buildFeedbackInfo(int feedbackType) {
+      String feedbackTypeString = '';
+      switch (feedbackType) {
+        case 0:
+          feedbackTypeString = AppLocalizations.of(context).noFeedback;
+          break;
+        case 1:
+          feedbackTypeString = AppLocalizations.of(context).bothSensorsInRange;
+          break;
+        case 2:
+          feedbackTypeString = AppLocalizations.of(context).simpleFeedback;
+          break;
+        case 3:
+          feedbackTypeString = AppLocalizations.of(context).advancedFeedback;
+          break;
+        case 4:
+          feedbackTypeString =
+              AppLocalizations.of(context).overpressureFeedback;
+          break;
+        case 4:
+          feedbackTypeString = AppLocalizations.of(context).negativeFeedback;
+          break;
+      }
+      return Container(
+        // height: 100,
+        width: double.infinity,
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          // shape: BoxShape.rectangle,
+
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Colors.grey.shade100,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(AppLocalizations.of(context).feedbackType),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              feedbackTypeString,
+              textAlign: TextAlign.center,
+              // softWrap: true,
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 20,
+                color: Theme.of(context).accentColor,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return InkWell(
       onTap: () => _selectUser(context),
       splashColor: Theme.of(context).primaryColor,
@@ -127,11 +182,12 @@ class UserItem extends StatelessWidget {
                     _buildUserInfo(
                         AppLocalizations.of(context).fingerSensorLowerRange,
                         user.fingerSensorLowerRange.toString()),
-                    _buildUserInfo(
-                        AppLocalizations.of(context).positiveFeedback,
-                        (user.isPositiveFeedback == 1)
-                            ? AppLocalizations.of(context).yes
-                            : AppLocalizations.of(context).no),
+                    // _buildUserInfo(
+                    //     AppLocalizations.of(context).positiveFeedback,
+                    //     (user.isPositiveFeedback == 1)
+                    //         ? AppLocalizations.of(context).yes
+                    //         : AppLocalizations.of(context).no),
+                    _buildFeedbackInfo(user.feedbackType),
                   ],
                 ),
               ),

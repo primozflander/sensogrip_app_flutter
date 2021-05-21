@@ -41,6 +41,7 @@
     "bothSensorsInRange": "Erweitertes Feedback",
     "advancedFeedback": "Detailliertes Feedback",
     "overpressureFeedback": "Feedback bei Drucküberschreitung",
+    "negativeFeedback": "Negatives Feedback",
     "dynamicRange": "Dynamische Grenzwertanpassung?",
     "positiveFeedbackColor": "Farbe des positiven Feedbacks",
     "negativeFeedbackColor": "Farbe des negativen Feedbacks",
@@ -107,8 +108,9 @@
     "fingerSensorRange": "Grenzwerte des Fingersensors",
     "back": "Zurück",
     "userManual": "Benutzerhandbuch",
-    "transferToCloudN": "Daten werden in die Cloud übertragen",
-    "deleteCloudDataN": "Daten aus der Cloud gelöscht",
+    "transferToCloudN": "Daten werden in die Cloud übertragen.",
+    "deleteCloudDataN": "Daten aus der Cloud gelöscht.",
     "appVersion": "App Version",
-    "deviceId": "Geräte-ID"
+    "deviceId": "Geräte-ID",
+    "checkConnectionN": "Daten werden nicht in die Cloud übertragen. Bitte überprüfen Sie die Internetverbindung."
 }
