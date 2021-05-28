@@ -122,7 +122,7 @@ class RealtimeChartState extends State<RealtimeChart>
     }
   }
 
-  void _addEntry(Map<String, int> streamData) {
+  void _addEntry(Map<String, dynamic> streamData) {
     LineData data = controller.data;
     if (data != null) {
       ILineDataSet set = data.getDataSetByIndex(0);

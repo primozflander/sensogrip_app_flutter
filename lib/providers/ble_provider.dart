@@ -6,9 +6,9 @@ import 'package:flutter_blue/flutter_blue.dart';
 class BleProvider with ChangeNotifier {
   BluetoothDevice _device;
   bool _isConnected = false;
-  Stream<List<int>> _stream;
+  Stream<List<dynamic>> _stream;
   StreamController _streamController;
-  Map<String, int> _receivedData = {};
+  Map<String, dynamic> _receivedData = {};
   Map<String, BluetoothCharacteristic> _bleChars = {};
 
   Map<String, BluetoothCharacteristic> get bleChars {
@@ -41,12 +41,12 @@ class BleProvider with ChangeNotifier {
     return _isConnected;
   }
 
-  void setStream(Stream<List<int>> stream) {
+  void setStream(Stream<List<dynamic>> stream) {
     _stream = stream;
     //notifyListeners();
   }
 
-  Stream<List<int>> get stream {
+  Stream<List<dynamic>> get stream {
     return _stream;
   }
 
@@ -59,7 +59,7 @@ class BleProvider with ChangeNotifier {
     return _streamController;
   }
 
-  Map<String, int> get receivedData {
+  Map<String, dynamic> get receivedData {
     return _receivedData;
   }
 
@@ -67,7 +67,7 @@ class BleProvider with ChangeNotifier {
     return _receivedData[name];
   }
 
-  void updateReceivedData(Map<String, int> data) {
+  void updateReceivedData(Map<String, dynamic> data) {
     _receivedData = data;
     //print(_receivedData);
     //notifyListeners();

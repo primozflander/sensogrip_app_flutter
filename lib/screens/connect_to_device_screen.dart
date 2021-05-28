@@ -64,7 +64,7 @@ class _ConnectToDeviceScreenState extends State<ConnectToDeviceScreen> {
           if (characteristic.uuid.toString() == Uuid.dataStream) {
             bleCharProvider.addBleChar(Uuid.dataStream, characteristic);
             await characteristic.setNotifyValue(!characteristic.isNotifying);
-            await device.requestMtu(32).then(
+            await device.requestMtu(64).then(
               (value) {
                 stream = characteristic.value;
                 _streamController.addStream(stream);

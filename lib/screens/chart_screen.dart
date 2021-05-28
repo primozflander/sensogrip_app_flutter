@@ -71,9 +71,9 @@ class _ChartScreenState extends State<ChartScreen> {
     }
   }
 
-  void _addMeasurementPoint(Map<String, int> data) {
+  void _addMeasurementPoint(Map<String, dynamic> data) {
     currentMeasurements.add(
-        '${data['timestamp']},${data['tipSensorValue']},${data['tipSensorUpperRange']},${data['tipSensorLowerRange']},${data['fingerSensorValue']},${data['fingerSensorUpperRange']},${data['fingerSensorLowerRange']},${data['angle']},${data['speed']}');
+        '${data['timestamp']},${data['tipSensorValue']},${data['tipSensorUpperRange']},${data['tipSensorLowerRange']},${data['fingerSensorValue']},${data['fingerSensorUpperRange']},${data['fingerSensorLowerRange']},${data['angle']},${data['speed']},${data['accX']},${data['accY']},${data['accZ']},${data['gyroX']},${data['gyroY']},${data['gyroZ']}');
   }
 
   void _saveMeasurementToDb(List<String> data, String description) {
@@ -92,10 +92,8 @@ class _ChartScreenState extends State<ChartScreen> {
   }
 
   void _saveMeasurementToFile(List<String> data, String description) async {
-    // String fileHeader =
-    //     'timestamp,tipSensorValue,fingerSensorValue,angle,speed,tipSensorUpperRange,tipSensorLowerRange,fingerSensorUpperRange,fingerSensorLowerRange';
     String fileHeader =
-        'timestamp,tipPressure,tipUpperRange,tipLowerRange,fingerPressure,fingerUpperRange,fingerLowerRange,angle,writtingSpeed';
+        'timestamp,tipPressure,tipUpperRange,tipLowerRange,fingerPressure,fingerUpperRange,fingerLowerRange,angle,writtingSpeed,accX,accY,accZ,gyroX,gyroY,gyroZ';
     data.insert(0, fileHeader);
     final userName =
         Provider.of<UsersProvider>(context, listen: false).selectedUser.name;
@@ -255,13 +253,14 @@ class _ChartScreenState extends State<ChartScreen> {
                 ],
               ),
             ),
-            StreamBuilder<List<int>>(
+            StreamBuilder<List<dynamic>>(
               stream: bleData.streamController.stream,
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<int>> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<dynamic>> snapshot) {
                 if (snapshot.hasError) return Text('Error: ${snapshot.error}');
                 if (snapshot.connectionState == ConnectionState.active) {
                   var parsedData = Functions.parseStream(snapshot.data);
+                  // print('Parsed data---------> $parsedData');
                   bleData.updateReceivedData(parsedData);
                   if (_isRecording) {
                     _addMeasurementPoint(parsedData);

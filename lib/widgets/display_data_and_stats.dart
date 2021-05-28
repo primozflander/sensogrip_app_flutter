@@ -5,7 +5,7 @@ import './display_sensor_stats.dart';
 import './display_value.dart';
 
 class DisplayDataAndStats extends StatelessWidget {
-  final Map<String, int> receivedData;
+  final Map<String, dynamic> receivedData;
 
   DisplayDataAndStats(
     this.receivedData,
