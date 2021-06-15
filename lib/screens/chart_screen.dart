@@ -157,7 +157,7 @@ class _ChartScreenState extends State<ChartScreen> {
         });
       },
     );
-    // controller.lockCaptureOrientation(DeviceOrientation.landscapeRight);
+    // controller.lockCaptureOrientation(DeviceOrientation.landscapeLeft);
   }
 
   Future<void> _initScreenRecorder() async {
@@ -241,12 +241,17 @@ class _ChartScreenState extends State<ChartScreen> {
                     Expanded(
                       child: Container(
                         margin: EdgeInsets.only(
-                            top: 10, left: 0, right: 10, bottom: 5),
+                            top: 10, left: 0, right: 10, bottom: 4),
                         height: size.height - 150,
                         // width: 590,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
-                          child: CameraPreview(controller),
+                          child: Transform.scale(
+                            scale: 2,
+                            child: Center(
+                              child: CameraPreview(controller),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -260,7 +265,7 @@ class _ChartScreenState extends State<ChartScreen> {
                 if (snapshot.hasError) return Text('Error: ${snapshot.error}');
                 if (snapshot.connectionState == ConnectionState.active) {
                   var parsedData = Functions.parseStream(snapshot.data);
-                  // print('Parsed data---------> $parsedData');
+                  //print('Parsed data---------> $parsedData');
                   bleData.updateReceivedData(parsedData);
                   if (_isRecording) {
                     _addMeasurementPoint(parsedData);

@@ -28,7 +28,7 @@ dependencies:
   flutter_blue: ^0.8.0
   mp_chart: ^0.3.1
   flutter_colorpicker: ^0.4.0
-  path_provider: ^1.6.27
+  path_provider: ^1.6.28
   sqflite: ^2.0.0+2
   path: ^1.8.0
   intl: ^0.17.0

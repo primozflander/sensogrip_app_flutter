@@ -118,56 +118,9 @@ class Functions {
     return output;
   }
 
-  // static String intToFeedbackString(int value) {
-  //   String output = "";
-  //   switch (value) {
-  //     case 0:
-  //       output = AppLocalizations.of(context)
-  //                                       .testProtocol;
-  //       break;
-  //     case 1:
-  //       output = FeedbackType.bothSensorsInRange;
-  //       break;
-  //     case 2:
-  //       output = FeedbackType.simpleFeedback;
-  //       break;
-  //     case 3:
-  //       output = FeedbackType.advancedFeedback;
-  //       break;
-  //     case 4:
-  //       output = FeedbackType.overpressureFeedback;
-  //       break;
-  //     case 4:
-  //       output = FeedbackType.overpressureFeedback;
-  //       break;
-  //   }
-  //   return output;
-  // }
-
-  // static List<int> parseStream(List<int> dataFromDevice) {
-  //   var data = ByteData.view(Uint8List.fromList(dataFromDevice).buffer);
-  //   if (data.lengthInBytes > 20) {
-  //     return [
-  //       data.getUint16(0, Endian.little),
-  //       data.getInt16(2, Endian.little),
-  //       data.getInt16(4, Endian.little),
-  //       data.getInt16(6, Endian.little).abs(),
-  //       data.getInt16(8, Endian.little),
-  //       data.getInt16(10, Endian.little),
-  //       data.getInt16(12, Endian.little),
-  //       data.getInt16(14, Endian.little),
-  //       data.getInt16(16, Endian.little),
-  //       data.getInt16(18, Endian.little),
-  //       data.getInt16(20, Endian.little),
-  //       data.getInt16(22, Endian.little),
-  //     ];
-  //   } else
-  //     return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  // }
-
   static Map<String, dynamic> parseStream(List<dynamic> dataFromDevice) {
     var data = ByteData.view(Uint8List.fromList(dataFromDevice).buffer);
-    if (data.lengthInBytes > 20) {
+    if (data.lengthInBytes == 48) {
       return {
         'timestamp': data.getUint16(0, Endian.little),
         'tipSensorValue': data.getInt16(2, Endian.little),
@@ -187,6 +140,27 @@ class Functions {
         'gyroX': data.getFloat32(36, Endian.little),
         'gyroY': data.getFloat32(40, Endian.little),
         'gyroZ': data.getFloat32(44, Endian.little),
+      };
+    } else if (data.lengthInBytes == 24) {
+      return {
+        'timestamp': data.getUint16(0, Endian.little),
+        'tipSensorValue': data.getInt16(2, Endian.little),
+        'fingerSensorValue': data.getInt16(4, Endian.little),
+        'angle': data.getInt16(6, Endian.little).abs(),
+        'speed': data.getInt16(8, Endian.little),
+        'batteryLevel': data.getInt16(10, Endian.little),
+        'secondsInRange': data.getInt16(12, Endian.little),
+        'secondsInUse': data.getInt16(14, Endian.little),
+        'tipSensorUpperRange': data.getInt16(16, Endian.little),
+        'tipSensorLowerRange': data.getInt16(18, Endian.little),
+        'fingerSensorUpperRange': data.getInt16(20, Endian.little),
+        'fingerSensorLowerRange': data.getInt16(22, Endian.little),
+        'accX': 0,
+        'accY': 0,
+        'accZ': 0,
+        'gyroX': 0,
+        'gyroY': 0,
+        'gyroZ': 0,
       };
     } else
       return {

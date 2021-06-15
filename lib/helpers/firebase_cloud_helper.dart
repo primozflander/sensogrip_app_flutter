@@ -4,10 +4,39 @@ import 'package:http/http.dart' as http;
 import 'package:connectivity/connectivity.dart';
 
 import '../models/data.dart';
+import '../models/http_exception.dart';
+import '../credentials/credentials.dart';
 
 class FirebaseCloudHelper {
-  static Future<void> transferDataToCloud(String user, Data data) async {
-    final url = 'https://sensogrip-default-rtdb.firebaseio.com/data/$user.json';
+  static Future<String> login() async {
+    final url =
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${Credentials.API_KEY}';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: json.encode(
+          {
+            'email': Credentials.EMAIL,
+            'password': Credentials.PASSWORD,
+            'returnSecureToken': true,
+          },
+        ),
+      );
+      final responseData = json.decode(response.body);
+      if (responseData['error'] != null) {
+        print(responseData['error']);
+        throw HttpException(responseData['error']['message']);
+      }
+      return responseData['idToken'];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<void> transferDataToCloud(
+      String user, Data data, String authToken) async {
+    final url =
+        'https://sensogripauth-default-rtdb.europe-west1.firebasedatabase.app/data/$user.json?auth=$authToken';
     try {
       final response = await http.post(Uri.parse(url),
           body: json.encode({
@@ -28,17 +57,18 @@ class FirebaseCloudHelper {
       String user, List<Data> data) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) return true;
-    final response = await deleteCloudData(user);
-    print('response from delete $response');
+    var authToken = await login();
+    final response = await deleteCloudData(user, authToken);
     if (response == true) return true;
     data.forEach((element) {
-      transferDataToCloud(user, element);
+      transferDataToCloud(user, element, authToken);
     });
     return false;
   }
 
-  static Future<bool> deleteCloudData(String user) async {
-    final url = 'https://sensogrip-default-rtdb.firebaseio.com/data/$user.json';
+  static Future<bool> deleteCloudData(String user, String authToken) async {
+    final url =
+        'https://sensogripauth-default-rtdb.europe-west1.firebasedatabase.app/data/$user.json?auth=$authToken';
     try {
       final response = await http.delete(Uri.parse(url));
       if (response.statusCode >= 400) {
