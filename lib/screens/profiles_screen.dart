@@ -33,12 +33,12 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
 
   void _addNewUser(String title) {
     final newUser = User(
-      id: 9999,
+      id: null,
       name: title,
       description: 'much wow',
       tipSensorUpperRange: 170,
       tipSensorLowerRange: 30,
-      fingerSensorUpperRange: 180,
+      fingerSensorUpperRange: 170,
       fingerSensorLowerRange: 30,
       isPositiveFeedback: 1,
       feedbackType: 4,
@@ -101,7 +101,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
 
   @override
   void initState() {
-    //SqlHelper.deleteDb('sensogrip');
+    SqlHelper.deleteDb('sensogrip');
     print('Profiles screen init');
     _getUsersFromDatabase();
     super.initState();
@@ -112,6 +112,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
     final size = MediaQuery.of(context).size;
     SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
         title: Text(

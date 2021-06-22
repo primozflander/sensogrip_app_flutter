@@ -58,20 +58,4 @@ class User {
       'ledNokColor': ledNokColor,
     };
   }
-
-  //   String get complexityText {
-//     switch (complexity) {
-//       case Complexity.Simple:
-//         return 'Simple';
-//         break;
-//       case Complexity.Challenging:
-//         return 'Challenging';
-//         break;
-//       case Complexity.Hard:
-//         return 'Hard';
-//         break;
-//       default:
-//         return 'Unknown';
-//     }
-//   }
 }

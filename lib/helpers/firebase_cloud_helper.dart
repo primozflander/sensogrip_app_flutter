@@ -42,7 +42,9 @@ class FirebaseCloudHelper {
           body: json.encode({
             'id': data.id,
             'userid': data.userid,
+            'username': data.username,
             'description': data.description,
+            'pencilname': data.pencilname,
             'measurement': data.measurement,
             'timestamp': data.timestamp,
           }));

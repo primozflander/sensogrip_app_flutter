@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:camera/camera.dart';
 import 'package:screen_recorder_flutter/screen_recorder_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:native_device_orientation/native_device_orientation.dart';
 
 import '../widgets/realtime_chart.dart';
 import '../widgets/display_data_and_stats.dart';
@@ -63,8 +65,14 @@ class _ChartScreenState extends State<ChartScreen> {
         (measurementDescription) {
           print('value from drop down $measurementDescription');
           if (measurementDescription != null) {
-            _saveMeasurementToDb(currentMeasurements, measurementDescription);
-            _saveMeasurementToFile(currentMeasurements, measurementDescription);
+            String pencilName = Provider.of<BleProvider>(context, listen: false)
+                .bleDevice
+                .name
+                .substring(9);
+            _saveMeasurementToDb(
+                currentMeasurements, measurementDescription, pencilName);
+            _saveMeasurementToFile(
+                currentMeasurements, measurementDescription, pencilName);
           }
         },
       );
@@ -76,13 +84,16 @@ class _ChartScreenState extends State<ChartScreen> {
         '${data['timestamp']},${data['tipSensorValue']},${data['tipSensorUpperRange']},${data['tipSensorLowerRange']},${data['fingerSensorValue']},${data['fingerSensorUpperRange']},${data['fingerSensorLowerRange']},${data['angle']},${data['speed']},${data['accX']},${data['accY']},${data['accZ']},${data['gyroX']},${data['gyroY']},${data['gyroZ']}');
   }
 
-  void _saveMeasurementToDb(List<String> data, String description) {
-    final id =
-        Provider.of<UsersProvider>(context, listen: false).selectedUser.id;
+  void _saveMeasurementToDb(
+      List<String> data, String description, String pencilName) {
+    final user =
+        Provider.of<UsersProvider>(context, listen: false).selectedUser;
     Data dbData = Data(
       id: null,
-      userid: id,
+      userid: user.id,
+      username: user.name,
       description: description,
+      pencilname: pencilName,
       measurement: data.join('_'),
       timestamp: DateFormat('dd.MM.yyyy kk:mm:ss').format(
         DateTime.now(),
@@ -91,7 +102,8 @@ class _ChartScreenState extends State<ChartScreen> {
     SqlHelper.insertData(dbData.toMap());
   }
 
-  void _saveMeasurementToFile(List<String> data, String description) async {
+  void _saveMeasurementToFile(
+      List<String> data, String description, String pencilName) async {
     String fileHeader =
         'timestamp,tipPressure,tipUpperRange,tipLowerRange,fingerPressure,fingerUpperRange,fingerLowerRange,angle,writtingSpeed,accX,accY,accZ,gyroX,gyroY,gyroZ';
     data.insert(0, fileHeader);
@@ -103,7 +115,7 @@ class _ChartScreenState extends State<ChartScreen> {
     await getExternalStorageDirectory().then(
       (directory) {
         File file = File(
-            '${directory.path}/${description}_${userName}_$formattedDate.txt');
+            '${directory.path}/${description}_${pencilName}_${userName}_$formattedDate.txt');
         file.writeAsString(data.join('\n'), mode: FileMode.write);
       },
     );
@@ -157,7 +169,16 @@ class _ChartScreenState extends State<ChartScreen> {
         });
       },
     );
-    // controller.lockCaptureOrientation(DeviceOrientation.landscapeLeft);
+    final orientation =
+        await NativeDeviceOrientationCommunicator().orientation();
+    print('orientation:-------------> $orientation');
+    DeviceOrientation camOrientaion;
+    if (orientation == NativeDeviceOrientation.landscapeRight) {
+      camOrientaion = DeviceOrientation.landscapeLeft;
+    } else {
+      camOrientaion = DeviceOrientation.landscapeRight;
+    }
+    controller.lockCaptureOrientation(camOrientaion);
   }
 
   Future<void> _initScreenRecorder() async {

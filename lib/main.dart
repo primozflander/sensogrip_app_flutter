@@ -50,9 +50,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         initialRoute: StartScreen.routeName,
-        // initialRoute: DataAndStatsScreen.routeName,
         routes: {
-          // IntroScreen.routeName: (context) => IntroScreen(),
           StartScreen.routeName: (context) => StartScreen(),
           ProfilesScreen.routeName: (context) => ProfilesScreen(),
           InfoScreen.routeName: (context) => InfoScreen(),

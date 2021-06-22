@@ -17,7 +17,7 @@ class InfoScreen extends StatefulWidget {
 class _InfoScreenState extends State<InfoScreen> {
   int _secondsInUse;
   int _secondsInRange;
-  String _deviceId = 'bla';
+  String _deviceId;
 
   @override
   void initState() {
@@ -170,7 +170,7 @@ class _InfoScreenState extends State<InfoScreen> {
                     size: 26,
                   ),
                   title:
-                      Text(AppLocalizations.of(context).appVersion + ': 1.3.0'),
+                      Text(AppLocalizations.of(context).appVersion + ': 1.4.0'),
                 ),
                 ListTile(
                   leading: Icon(

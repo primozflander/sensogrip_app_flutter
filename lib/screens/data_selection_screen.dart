@@ -109,8 +109,16 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
         actions: [
           _isLoading
               ? Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
+                  widthFactor: 1.6,
+                  child: SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3.0,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 )
               : IconButton(

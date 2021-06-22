@@ -28,15 +28,12 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
       () {
         _data = data;
         _measurement = _parseMeasurement(_data.measurement);
-        // print('in parsed data $_measurement');
         _statistics = _calculateStatistics(_measurement);
       },
     );
   }
 
   void _getDataFromDatabase() async {
-    // final selectedUser =
-    //     Provider.of<UsersProvider>(context, listen: false).selectedUser;
     await SqlHelper.getData().then(
       (data) {
         if (data.isNotEmpty) {
@@ -47,7 +44,6 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
   }
 
   Map<String, int> _calculateStatistics(List<Map<String, int>> measurements) {
-    // print('inside calculate stat $measurements');
     List<int> tipSensorValues = [0];
     List<int> fingerSensorValues = [0];
     List<int> angleValues = [0];
@@ -66,20 +62,6 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
     );
     tipSensorValues.sort((a, b) => a.compareTo(b));
     fingerSensorValues.sort((a, b) => a.compareTo(b));
-
-    // int duration =
-    //     measurements.last['timestamp'] - measurements.first['timestamp'];
-    // return {
-    //   'tipSensorMax': tipSensorValues.last ?? 0,
-    //   'tipSensorAverage': 0,
-    //   'tipSensorMedian': 0,
-    //   'fingerSensorMax': 0,
-    //   'fingerSensorAverage': 0,
-    //   'fingerSensorMedian': 0,
-    //   'angleAverage': 0,
-    //   'speedAverage': 0,
-    //   'tipAndFingerSum': 0
-    // };
     return {
       'timestamp':
           ((measurements.last['timestamp'] - measurements.first['timestamp']) /
@@ -149,7 +131,6 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final users = Provider.of<UsersProvider>(context, listen: false).users;
-    // print('here bool ${widget.isSmall}');
     Widget _buildDataStat(String title, String data) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -252,6 +233,9 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
                                     : size.height - 280,
                                 child: ListView(
                                   children: [
+                                    _buildDataStat(
+                                        AppLocalizations.of(context).pencilName,
+                                        _data.pencilname),
                                     _buildDataStat(
                                         AppLocalizations.of(context)
                                             .maxTipPressure,

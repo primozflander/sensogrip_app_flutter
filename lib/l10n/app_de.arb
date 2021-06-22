@@ -64,6 +64,7 @@
     "singleChart": "Eine Tabelle",
     "twoCharts": "Zwei Tabellen",
     "date": "Datum",
+    "pencilName": "Stiftname",
     "maxTipPressure": "Maximaler Minendruck",
     "averageTipPressure": "Durchschnittlicher Minendruck",
     "tipPressureMedian": "Median des Minendruckes",
@@ -112,5 +113,7 @@
     "deleteCloudDataN": "Daten aus der Cloud gelöscht.",
     "appVersion": "App Version",
     "deviceId": "Geräte-ID",
-    "checkConnectionN": "Daten werden nicht in die Cloud übertragen. Bitte überprüfen Sie die Internetverbindung."
+    "checkConnectionN": "Daten werden nicht in die Cloud übertragen. Bitte überprüfen Sie die Internetverbindung.",
+    "provideValidNameF": "Bitte geben Sie einen gültigen Namen an.",
+    "userExistsF": "Der Benutzername existiert bereits."
 }

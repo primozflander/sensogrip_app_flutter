@@ -11,7 +11,7 @@ class UsersProvider with ChangeNotifier {
     description: 'default',
     tipSensorUpperRange: 170,
     tipSensorLowerRange: 30,
-    fingerSensorUpperRange: 180,
+    fingerSensorUpperRange: 170,
     fingerSensorLowerRange: 30,
     isPositiveFeedback: 1,
     feedbackType: 4,

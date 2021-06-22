@@ -205,12 +205,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             value: value,
             groupValue: _selectedFeedback,
             onChanged: (FeedbackType value) {
-              value == FeedbackType.negativeFeedback
-                  ? _isPositiveFeedback = 0
-                  : _isPositiveFeedback = 1;
-              value == FeedbackType.negativeFeedback
-                  ? _feedbackType = 1
-                  : _feedbackType = Functions.feedbackTypeToInt(value);
+              // value == FeedbackType.negativeFeedback
+              //     ? _isPositiveFeedback = 0
+              //     : _isPositiveFeedback = 1;
+              // value == FeedbackType.negativeFeedback
+              //     ? _feedbackType = 1
+              //     : _feedbackType = Functions.feedbackTypeToInt(value);
+              _isPositiveFeedback = 1;
+              _feedbackType = Functions.feedbackTypeToInt(value);
               print(Functions.feedbackTypeToInt(value));
               _writeConfigurationState();
               setState(

@@ -64,6 +64,7 @@
     "singleChart": "Single chart",
     "twoCharts": "Two charts",
     "date": "Date",
+    "pencilName": "Pencil name",
     "maxTipPressure": "Max tip pressure",
     "averageTipPressure": "Average tip pressure",
     "tipPressureMedian": "Tip pressure median",
@@ -112,5 +113,7 @@
     "deleteCloudDataN": "Data deleted from the cloud.",
     "appVersion": "App version",
     "deviceId": "Device id",
-    "checkConnectionN": "Data not transfered to cloud. Please check internet connection."
+    "checkConnectionN": "Data not transfered to cloud. Please check internet connection.",
+    "provideValidNameF": "Please provide a valid name.",
+    "userExistsF": "The username already exists."
 }

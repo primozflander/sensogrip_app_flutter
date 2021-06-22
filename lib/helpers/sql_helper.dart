@@ -1,28 +1,18 @@
 import 'dart:async';
 
-import 'package:path/path.dart';
+import 'package:path/path.dart' as p;
+// import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../models/user.dart';
 import '../models/data.dart';
 
 class SqlHelper {
-  // static Future<Database> database() async {
-  //   final dbPath = await getDatabasesPath();
-  //   print('database path: $dbPath');
-  //   return openDatabase(
-  //     join(dbPath, 'sensogrip.db'),
-  //     onCreate: (db, version) => _createDb(db),
-  //     onConfigure: _onConfigure,
-  //     version: 1,
-  //   );
-  // }
-
   static Future<Database> database() async {
-    final dbPath = await getExternalStorageDirectory();
+    final dbPath = await getDatabasesPath();
+    print('database path $dbPath');
     return openDatabase(
-      join(dbPath.path, 'sensogrip.db'),
+      p.join(dbPath, 'sensogrip.db'),
       onCreate: (db, version) => _createDb(db),
       onConfigure: _onConfigure,
       version: 1,
@@ -57,7 +47,9 @@ class SqlHelper {
         CREATE TABLE data(
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           userid INTEGER NOT NULL,
+          username TEXT NOT NULL,
           description TEXT NOT NULL,
+          pencilname TEXT NOT NULL,
           measurement TEXT NOT NULL,
           timestamp TEXT NOT NULL,
           FOREIGN KEY(userid) REFERENCES users(id)
@@ -71,18 +63,11 @@ class SqlHelper {
   }
 
   static Future<void> deleteDb(String database) async {
-    final dbPath = await getExternalStorageDirectory();
-    String path = join(dbPath.path, '$database.db');
+    final dbPath = await getDatabasesPath();
+    String path = p.join(dbPath, '$database.db');
     deleteDatabase(path);
     print('Delete database $database');
   }
-
-  //   static Future<void> deleteDb(String database) async {
-  //   final dbPath = await getDatabasesPath();
-  //   String path = join(dbPath, '$database.db');
-  //   deleteDatabase(path);
-  //   print('Delete database $database');
-  // }
 
   static Future<void> insert(String table, Map<String, Object> data) async {
     final db = await SqlHelper.database();
@@ -186,7 +171,9 @@ class SqlHelper {
           Data(
             id: data['id'],
             userid: data['userid'],
+            username: data['username'],
             description: data['description'],
+            pencilname: data['pencilname'],
             measurement: data['measurement'],
             timestamp: data['timestamp'],
           ),
@@ -206,7 +193,9 @@ class SqlHelper {
           Data(
             id: data['id'],
             userid: data['userid'],
+            username: data['username'],
             description: data['description'],
+            pencilname: data['pencilname'],
             measurement: data['measurement'],
             timestamp: data['timestamp'],
           ),

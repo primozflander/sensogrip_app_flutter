@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../providers/users_provider.dart';
+import '../models/user.dart';
 
 class AddUser extends StatefulWidget {
   final Function addUser;
@@ -11,17 +15,14 @@ class AddUser extends StatefulWidget {
 }
 
 class _AddUserState extends State<AddUser> {
-  final _userNameController = TextEditingController();
+  final _form = GlobalKey<FormState>();
 
-  void _submitData() {
-    if (_userNameController.text.isEmpty) {
+  void _submitData() async {
+    final isValid = _form.currentState.validate();
+    if (!isValid) {
       return;
     }
-    final enteredName = _userNameController.text;
-    if (enteredName.isEmpty) {
-      return;
-    }
-    widget.addUser(enteredName);
+    _form.currentState.save();
     Navigator.of(context).pop();
   }
 
@@ -39,21 +40,39 @@ class _AddUserState extends State<AddUser> {
           ),
           Container(
             width: 400,
-            child: TextField(
-              decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).enterName),
-              style: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 18,
-                color: Colors.grey,
-                fontFamily: 'Quicksand',
+            child: Form(
+              key: _form,
+              child: TextFormField(
+                decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context).enterName),
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 18,
+                  color: Colors.grey,
+                  fontFamily: 'Quicksand',
+                ),
+                // controller: _userNameController,
+                onChanged: (_) {
+                  setState(() {});
+                },
+                onSaved: (value) => widget.addUser(value),
+                validator: (value) {
+                  List<User> existingUsers =
+                      Provider.of<UsersProvider>(context, listen: false).users;
+                  if (value.isEmpty || value.trim() == "") {
+                    return AppLocalizations.of(context).provideValidNameF;
+                  }
+                  if (existingUsers
+                      .where((user) => user.name == value.trim())
+                      .isNotEmpty) {
+                    return AppLocalizations.of(context).userExistsF;
+                  }
+                  return null;
+                },
               ),
-              controller: _userNameController,
-              onSubmitted: (_) => _submitData(),
             ),
           ),
           Container(
-            // width: 150,
             height: 50,
             child: ElevatedButton.icon(
               icon: Icon(
@@ -71,7 +90,6 @@ class _AddUserState extends State<AddUser> {
               ),
               style: ElevatedButton.styleFrom(
                 primary: Theme.of(context).accentColor,
-                //onPrimary: Colors.white,
               ),
               onPressed: () => _submitData(),
             ),
