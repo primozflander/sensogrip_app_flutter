@@ -115,5 +115,6 @@
     "deviceId": "Device id",
     "checkConnectionN": "Data not transfered to cloud. Please check internet connection.",
     "provideValidNameF": "Please provide a valid name.",
-    "userExistsF": "The username already exists."
+    "userExistsF": "The username already exists.",
+    "pencilVersion": "Pencil version"
 }

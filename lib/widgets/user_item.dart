@@ -72,7 +72,7 @@ class UserItem extends StatelessWidget {
           feedbackTypeString =
               AppLocalizations.of(context).overpressureFeedback;
           break;
-        case 4:
+        case 5:
           feedbackTypeString = AppLocalizations.of(context).negativeFeedback;
           break;
       }
@@ -82,7 +82,6 @@ class UserItem extends StatelessWidget {
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
           // shape: BoxShape.rectangle,
-
           borderRadius: BorderRadius.all(Radius.circular(10)),
           color: Colors.grey.shade100,
         ),
@@ -182,11 +181,6 @@ class UserItem extends StatelessWidget {
                     _buildUserInfo(
                         AppLocalizations.of(context).fingerSensorLowerRange,
                         user.fingerSensorLowerRange.toString()),
-                    // _buildUserInfo(
-                    //     AppLocalizations.of(context).positiveFeedback,
-                    //     (user.isPositiveFeedback == 1)
-                    //         ? AppLocalizations.of(context).yes
-                    //         : AppLocalizations.of(context).no),
                     _buildFeedbackInfo(user.feedbackType),
                   ],
                 ),

@@ -101,7 +101,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
 
   @override
   void initState() {
-    SqlHelper.deleteDb('sensogrip');
+    // SqlHelper.deleteDb('sensogrip');
     print('Profiles screen init');
     _getUsersFromDatabase();
     super.initState();

@@ -115,5 +115,6 @@
     "deviceId": "Geräte-ID",
     "checkConnectionN": "Daten werden nicht in die Cloud übertragen. Bitte überprüfen Sie die Internetverbindung.",
     "provideValidNameF": "Bitte geben Sie einen gültigen Namen an.",
-    "userExistsF": "Der Benutzername existiert bereits."
+    "userExistsF": "Der Benutzername existiert bereits.",
+    "pencilVersion": "Stift Version"
 }

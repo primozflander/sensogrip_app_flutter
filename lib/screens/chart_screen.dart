@@ -23,8 +23,8 @@ import '../providers/ble_provider.dart';
 import '../providers/users_provider.dart';
 
 enum ViewOptions {
-  BleData,
-  BleAndCameraData,
+  ShowChart,
+  ShowChartAndCamera,
 }
 
 class ChartScreen extends StatefulWidget {
@@ -197,7 +197,7 @@ class _ChartScreenState extends State<ChartScreen> {
 
   @override
   void initState() {
-    _initCamera();
+    // _initCamera();
     _initScreenRecorder();
     super.initState();
   }
@@ -221,9 +221,11 @@ class _ChartScreenState extends State<ChartScreen> {
               onSelected: (ViewOptions selectedValue) {
                 setState(
                   () {
-                    if (selectedValue == ViewOptions.BleData) {
+                    if (selectedValue == ViewOptions.ShowChart) {
                       _isCameraOn = false;
+                      // controller?.dispose();
                     } else {
+                      _initCamera();
                       _isCameraOn = true;
                     }
                   },
@@ -234,12 +236,12 @@ class _ChartScreenState extends State<ChartScreen> {
                 PopupMenuItem(
                   child:
                       Text(AppLocalizations.of(context).displayRealtimeChart),
-                  value: ViewOptions.BleData,
+                  value: ViewOptions.ShowChart,
                 ),
                 PopupMenuItem(
                   child: Text(AppLocalizations.of(context)
                       .displayRealtimeChartAndVideo),
-                  value: ViewOptions.BleAndCameraData,
+                  value: ViewOptions.ShowChartAndCamera,
                 ),
               ],
             ),

@@ -97,8 +97,47 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
     super.initState();
   }
 
+  TextStyle headerStyle = TextStyle(fontSize: 18, color: Colors.white);
+
+  Widget _buildHeader() {
+    return Container(
+      height: 60,
+      color: Colors.black87,
+      child: Row(
+        children: [
+          // SizedBox(width: 20),
+          Container(
+              width: 200,
+              alignment: Alignment.center,
+              child:
+                  Text(AppLocalizations.of(context).user, style: headerStyle)),
+          Container(
+              width: 165,
+              alignment: Alignment.center,
+              child: Text('Id', style: headerStyle)),
+          Container(
+              width: 195,
+              alignment: Alignment.center,
+              child: Text(AppLocalizations.of(context).protocol,
+                  style: headerStyle)),
+          Container(
+              width: 210,
+              alignment: Alignment.center,
+              child: Text(AppLocalizations.of(context).pencilName,
+                  style: headerStyle)),
+          Container(
+              width: 170,
+              alignment: Alignment.center,
+              child:
+                  Text(AppLocalizations.of(context).date, style: headerStyle)),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -157,15 +196,23 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
           ),
         ],
       ),
-      body: Container(
-        height: 700,
-        child: ListView.builder(
-          itemCount: _filteredData.length,
-          itemBuilder: (ctx, i) => DataItem(
-              _filteredData[i],
-              (_filteredData[i].id == widget.selectedData.id) ? true : false,
-              _deleteData),
-        ),
+      body: Column(
+        children: [
+          _buildHeader(),
+          Container(
+            height: size.height - 130,
+            child: ListView.builder(
+              itemCount: _filteredData.length,
+              reverse: true,
+              itemBuilder: (ctx, i) => DataItem(
+                  _filteredData[i],
+                  (_filteredData[i].id == widget.selectedData.id)
+                      ? true
+                      : false,
+                  _deleteData),
+            ),
+          ),
+        ],
       ),
     );
   }

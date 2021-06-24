@@ -164,13 +164,21 @@ class _InfoScreenState extends State<InfoScreen> {
                     ),
                   ),
                 ),
+                // ListTile(
+                //   leading: Icon(
+                //     Icons.edit,
+                //     size: 26,
+                //   ),
+                //   title: Text(
+                //       AppLocalizations.of(context).pencilVersion + ': 2.0'),
+                // ),
                 ListTile(
                   leading: Icon(
                     Icons.code,
                     size: 26,
                   ),
                   title:
-                      Text(AppLocalizations.of(context).appVersion + ': 1.4.0'),
+                      Text(AppLocalizations.of(context).appVersion + ': 1.6.0'),
                 ),
                 ListTile(
                   leading: Icon(

@@ -41,7 +41,8 @@ dependencies:
   device_info: ^2.0.0
   connectivity: ^3.0.4
   native_device_orientation: ^1.0.0
-  # introduction_screen: ^2.1.0
+  introduction_screen: ^2.1.0
+  shared_preferences: ^0.5.12+4
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -77,10 +78,17 @@ flutter:
   assets:
   #   - images/a_dot_burr.jpeg
     - assets/images/fhcampus_banner.png
-    - assets/images/no_users_yet.png
     - assets/images/no_data.jpg
     - assets/images/add_user.png
     - assets/pdf/manual.pdf
+    - assets/images/cloud.png
+    - assets/images/cloud2.png
+    - assets/images/analyze.png
+    - assets/images/users.png
+    - assets/images/feedback.png
+    - assets/images/analyzeData.png
+    - assets/images/profiles.png
+    - assets/images/ledFeedback.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

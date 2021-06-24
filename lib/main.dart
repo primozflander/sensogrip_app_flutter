@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './providers/ble_provider.dart';
 import './providers/users_provider.dart';
@@ -15,8 +16,21 @@ import './screens/start_screen.dart';
 import './screens/connect_to_device_screen.dart';
 import './screens/data_and_stats_screen.dart';
 import './screens/help_screen.dart';
+import './screens/onboarding_screen.dart';
 
-void main() => runApp(MyApp());
+// void main() => runApp(MyApp());
+bool showOnboarding;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool("showOnboarding", null);
+  showOnboarding = prefs.getBool("showOnboarding");
+  if (showOnboarding == null) {
+    await prefs.setBool("showOnboarding", false);
+  }
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -25,6 +39,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -49,7 +64,10 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Quicksand',
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        initialRoute: StartScreen.routeName,
+        // initialRoute: StartScreen.routeName,
+        initialRoute: showOnboarding != null
+            ? StartScreen.routeName
+            : OnboardingScreen.routeName,
         routes: {
           StartScreen.routeName: (context) => StartScreen(),
           ProfilesScreen.routeName: (context) => ProfilesScreen(),
@@ -59,6 +77,7 @@ class MyApp extends StatelessWidget {
           ConnectToDeviceScreen.routeName: (context) => ConnectToDeviceScreen(),
           DataAndStatsScreen.routeName: (context) => DataAndStatsScreen(),
           HelpScreen.routeName: (context) => HelpScreen(),
+          OnboardingScreen.routeName: (context) => OnboardingScreen(),
           // DataSelectionScreen.routeName: (context) => DataSelectionScreen(),
         },
         onUnknownRoute: (settings) {

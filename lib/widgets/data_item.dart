@@ -17,9 +17,30 @@ class DataItem extends StatelessWidget {
     Navigator.pop(context, data);
   }
 
+  Widget _buildDataBody(Data data) {
+    return Row(
+      children: [
+        Container(
+            width: 100, alignment: Alignment.center, child: Text('${data.id}')),
+        Container(
+            width: 250,
+            alignment: Alignment.center,
+            child: Text(data.description)),
+        Container(
+            width: 160,
+            alignment: Alignment.center,
+            child: Text(data.pencilname)),
+        Container(
+            width: 225,
+            alignment: Alignment.center,
+            child: Text(data.timestamp)),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final users = Provider.of<UsersProvider>(context, listen: false).users;
+    // final users = Provider.of<UsersProvider>(context, listen: false).users;
     return InkWell(
       onTap: () => _selectData(context),
       //borderRadius: BorderRadius.circular(15),
@@ -30,23 +51,22 @@ class DataItem extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         elevation: 2,
         child: ListTile(
-          minLeadingWidth: 250,
+          minVerticalPadding: 30,
+          minLeadingWidth: 190,
           selected: isSelected,
           // selectedTileColor: Colors.grey.shade200,
           leading: Chip(
             padding: EdgeInsets.all(10),
             label: Text(
-              '${(users.where((user) => user.id == data.userid)).first.name}',
+              // '${(users.where((user) => user.id == data.userid)).first.name}',
+              '${data.username}',
               style: TextStyle(
                 fontSize: 20,
               ),
             ),
           ),
-          title: Text(AppLocalizations.of(context).protocol +
-              ': ${data.description}, ' +
-              AppLocalizations.of(context).date +
-              ': ${data.timestamp}'),
-          subtitle: Text('Id: ${data.id}'),
+          title: _buildDataBody(data),
+          // subtitle: Text('Id: ${data.id}'),
           trailing: IconButton(
             icon: Icon(
               Icons.delete,

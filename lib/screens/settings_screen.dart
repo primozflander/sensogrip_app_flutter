@@ -277,7 +277,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     alignment: Alignment.center,
                                     child: Text(
                                       _tipSensorRangeValues.start
-                                          .round()
+                                          .floor()
                                           .toString(),
                                       style: TextStyle(color: Colors.grey),
                                     ),
@@ -292,10 +292,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     divisions: 500,
                                     labels: RangeLabels(
                                       _tipSensorRangeValues.start
-                                          .round()
+                                          .floor()
                                           .toString(),
                                       _tipSensorRangeValues.end
-                                          .round()
+                                          .floor()
                                           .toString(),
                                     ),
                                     onChanged: (RangeValues values) {
@@ -325,7 +325,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     alignment: Alignment.center,
                                     child: Text(
                                       _tipSensorRangeValues.end
-                                          .round()
+                                          .floor()
                                           .toString(),
                                       style: TextStyle(color: Colors.grey),
                                     ),
@@ -348,7 +348,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     alignment: Alignment.center,
                                     child: Text(
                                       _fingerSensorRangeValues.start
-                                          .round()
+                                          .floor()
                                           .toString(),
                                       style: TextStyle(color: Colors.grey),
                                     ),
@@ -363,10 +363,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     divisions: 500,
                                     labels: RangeLabels(
                                       _fingerSensorRangeValues.start
-                                          .round()
+                                          .floor()
                                           .toString(),
                                       _fingerSensorRangeValues.end
-                                          .round()
+                                          .floor()
                                           .toString(),
                                     ),
                                     onChanged: (RangeValues values) {
@@ -394,7 +394,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     alignment: Alignment.center,
                                     child: Text(
                                       _fingerSensorRangeValues.end
-                                          .round()
+                                          .floor()
                                           .toString(),
                                       style: TextStyle(color: Colors.grey),
                                     ),
@@ -450,63 +450,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                               ),
                             ),
-
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            //   children: [
-                            //     _buildRadioButton(
-                            //       AppLocalizations.of(context).noFeedback,
-                            //       FeedbackType.noFeedback,
-                            //     ),
-                            //     _buildRadioButton(
-                            //       AppLocalizations.of(context).simpleFeedback,
-                            //       FeedbackType.simpleFeedback,
-                            //     ),
-                            //     _buildRadioButton(
-                            //       AppLocalizations.of(context)
-                            //           .bothSensorsInRange,
-                            //       FeedbackType.bothSensorsInRange,
-                            //     ),
-                            //     _buildRadioButton(
-                            //       AppLocalizations.of(context).advancedFeedback,
-                            //       FeedbackType.advancedFeedback,
-                            //     ),
-                            //     _buildRadioButton(
-                            //       AppLocalizations.of(context)
-                            //           .overpressureFeedback,
-                            //       FeedbackType.overpressureFeedback,
-                            //     ),
-                            //   ],
-                            // ),
-                            // Container(
-                            //   margin: EdgeInsets.symmetric(vertical: 20.0),
-                            //   height: 100.0,
-                            //   child: ListView(
-                            //     scrollDirection: Axis.horizontal,
-                            //     children: <Widget>[
-                            //       Container(
-                            //         width: 300.0,
-                            //         color: Colors.redAccent,
-                            //       ),
-                            //       Container(
-                            //         width: 300.0,
-                            //         color: Colors.blue,
-                            //       ),
-                            //       Container(
-                            //         width: 300.0,
-                            //         color: Colors.green,
-                            //       ),
-                            //       Container(
-                            //         width: 300.0,
-                            //         color: Colors.yellow,
-                            //       ),
-                            //       Container(
-                            //         width: 300.0,
-                            //         color: Colors.orange,
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),
