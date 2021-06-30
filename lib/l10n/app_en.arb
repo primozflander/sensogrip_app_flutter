@@ -116,5 +116,17 @@
     "checkConnectionN": "Data not transfered to cloud. Please check internet connection.",
     "provideValidNameF": "Please provide a valid name.",
     "userExistsF": "The username already exists.",
-    "pencilVersion": "Pencil version"
+    "nameTooLongF": "Please provide name shorter than 20 characters.",
+    "pencilVersion": "Pencil version",
+    "skipBtn": "Skip",
+    "nextBtn": "Next",
+    "getStartedBtn": "Get started",
+    "instantFeedbackH": "Instant feedback",
+    "userProfilesH": "User profiles",
+    "analyzeDataH": "Analyze data",
+    "cloudServiceH": "Cloud service",
+    "instantFeedbackD": "Get instant feedback via real-time chart and built-in pencil LED.",
+    "userProfilesD": "Each user has their own profile, with their own personalized settings and measurements.",
+    "analyzeDataD": "Get detailed statistics of your measurements from the App or simply export your data to your PC for further analysis.",
+    "cloudServiceD": "Save your data securely to the cloud."
 }

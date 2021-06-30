@@ -205,6 +205,7 @@ class Functions {
                   content: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: Container(
+                      width: 400,
                       height: 90,
                       // width: 500,
                       child: dropdownValue !=
@@ -218,8 +219,7 @@ class Functions {
                                   height: 20,
                                 ),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(AppLocalizations.of(context)
                                             .testProtocol +
@@ -242,6 +242,11 @@ class Functions {
                                       onChanged: (String newValue) {
                                         setState(() {
                                           dropdownValue = newValue;
+                                          if (dropdownValue ==
+                                              AppLocalizations.of(context)
+                                                  .newTestProtocol) {
+                                            _isCustom = true;
+                                          }
                                         });
                                       },
                                       items: <String>[
@@ -278,37 +283,32 @@ class Functions {
                           : Form(
                               key: _form,
                               child: TextFormField(
-                                initialValue: '',
-                                decoration: InputDecoration(
-                                    labelText: AppLocalizations.of(context)
-                                        .testProtocol),
-                                textInputAction: TextInputAction.done,
-                                // onFieldSubmitted: (_) {
-                                //   print('--------------->form submited');
-                                //   // FocusScope.of(context).requestFocus(_priceFocusNode);
-                                // },
-                                onSaved: (value) {
-                                  dropdownValue = value;
-                                },
-                                onChanged: (_) {
-                                  _isCustom = true;
-                                  print('custom---------->');
-                                },
-                                // validator: (value) {
-                                //   if (value.isEmpty) {
-                                //     return 'Please provide a value';
-                                //   }
-                                //   return null;
-                                // },
-                              ),
+                                  initialValue: '',
+                                  decoration: InputDecoration(
+                                      labelText: AppLocalizations.of(context)
+                                          .testProtocol),
+                                  textInputAction: TextInputAction.done,
+                                  onSaved: (value) {
+                                    dropdownValue = value;
+                                  },
+                                  validator: (value) {
+                                    if (value.isEmpty || value.trim() == "") {
+                                      return AppLocalizations.of(context)
+                                          .provideValidNameF;
+                                    }
+                                    if (value.trim().length > 20) {
+                                      return AppLocalizations.of(context)
+                                          .nameTooLongF;
+                                    }
+                                    return null;
+                                  }),
                             ),
                     ),
                   ),
                   actions: <Widget>[
                     Row(
                       children: [
-                        if (dropdownValue ==
-                            AppLocalizations.of(context).newTestProtocol)
+                        if (_isCustom)
                           Row(
                             children: [
                               SizedBox(
@@ -332,6 +332,13 @@ class Functions {
                         TextButton(
                           onPressed: () {
                             if (_isCustom) {
+                              final isValid = _form.currentState.validate();
+                              print(
+                                  '${_form.currentState.toString()} isValid:$isValid');
+                              if (!isValid) {
+                                return;
+                              }
+                              print(_form.currentState.toString());
                               _form.currentState.save();
                             }
                             Navigator.of(context).pop(dropdownValue);

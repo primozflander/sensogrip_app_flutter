@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../screens/start_screen.dart';
 
@@ -21,7 +22,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     const pageDecoration = const PageDecoration(
       titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
-      bodyTextStyle: TextStyle(fontSize: 18.0),
+      bodyTextStyle: TextStyle(fontSize: 18.0, color: Colors.grey),
       titlePadding: EdgeInsets.all(30),
       descriptionPadding: EdgeInsets.symmetric(vertical: 30, horizontal: 300),
       pageColor: Colors.white,
@@ -33,9 +34,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       globalBackgroundColor: Colors.white,
       pages: [
         PageViewModel(
-          title: "Instant feedback",
-          body:
-              "Get instant feedback via real-time chart and built-in pencil LED.",
+          title: AppLocalizations.of(context).instantFeedbackH,
+          body: AppLocalizations.of(context).instantFeedbackD,
           image: Image.asset(
             'assets/images/ledFeedback.png',
             width: 400,
@@ -43,9 +43,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "User profiles",
-          body:
-              "Each user has their own profile, with their own personalized settings and measurements.",
+          title: AppLocalizations.of(context).userProfilesH,
+          body: AppLocalizations.of(context).userProfilesD,
           image: Image.asset(
             'assets/images/profiles.png',
             width: 400,
@@ -53,15 +52,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Analyze data",
-          body:
-              "Get detailed statistics of your measurements from the App or simply export your data to your PC for further analysis.",
+          title: AppLocalizations.of(context).analyzeDataH,
+          body: AppLocalizations.of(context).analyzeDataD,
           image: Image.asset('assets/images/analyzeData.png', width: 400),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Cloud service",
-          body: "Save your data securely to the cloud.",
+          title: AppLocalizations.of(context).cloudServiceH,
+          body: AppLocalizations.of(context).cloudServiceD,
           image: Image.asset('assets/images/cloud.png', width: 270),
           decoration: pageDecoration,
         ),
@@ -69,13 +67,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       onDone: () => _onIntroEnd(context),
       onSkip: () => _onIntroEnd(context),
       showSkipButton: true,
-      skip: const Text('Skip',
+      skip: Text(AppLocalizations.of(context).skipBtn,
           style: TextStyle(color: Colors.grey, fontSize: 18)),
       next: Container(
         height: 60,
         child: Center(
-          child: const Text('Next',
-              style: TextStyle(color: Colors.grey, fontSize: 18)),
+          child: Text(AppLocalizations.of(context).nextBtn,
+              style: TextStyle(color: Colors.green, fontSize: 18)),
         ),
       ),
       done: Container(
@@ -85,7 +83,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         width: 200,
         height: 60,
         child: Center(
-          child: const Text('Get started',
+          child: Text(AppLocalizations.of(context).getStartedBtn,
               style: TextStyle(color: Colors.white, fontSize: 18)),
         ),
       ),

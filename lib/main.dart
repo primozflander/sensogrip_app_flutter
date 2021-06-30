@@ -24,11 +24,12 @@ bool showOnboarding;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setBool("showOnboarding", null);
-  showOnboarding = prefs.getBool("showOnboarding");
+  // await prefs.setBool('showOnboarding', null);
+  showOnboarding = prefs.getBool('showOnboarding');
   if (showOnboarding == null) {
-    await prefs.setBool("showOnboarding", false);
+    await prefs.setBool('showOnboarding', false);
   }
+  // runApp(RootRestorationScope(restorationId: 'root', child: MyApp()));
   runApp(MyApp());
 }
 
@@ -39,7 +40,6 @@ class MyApp extends StatelessWidget {
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -53,6 +53,7 @@ class MyApp extends StatelessWidget {
         // ),
       ],
       child: MaterialApp(
+        // restorationScopeId: 'root',
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         debugShowCheckedModeBanner: false,

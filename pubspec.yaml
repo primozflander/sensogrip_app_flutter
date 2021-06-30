@@ -82,7 +82,6 @@ flutter:
     - assets/images/add_user.png
     - assets/pdf/manual.pdf
     - assets/images/cloud.png
-    - assets/images/cloud2.png
     - assets/images/analyze.png
     - assets/images/users.png
     - assets/images/feedback.png

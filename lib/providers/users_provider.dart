@@ -71,7 +71,7 @@ class UsersProvider with ChangeNotifier {
     SqlHelper.updateUser(_selectedUser);
   }
 
-  void setSelectedUser(User user) {
+  void setSelectedUser(User user) async {
     _selectedUser = user;
   }
 

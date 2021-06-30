@@ -67,6 +67,9 @@ class _AddUserState extends State<AddUser> {
                       .isNotEmpty) {
                     return AppLocalizations.of(context).userExistsF;
                   }
+                  if (value.trim().length > 20) {
+                    return AppLocalizations.of(context).nameTooLongF;
+                  }
                   return null;
                 },
               ),

@@ -215,10 +215,12 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
                                               DataSelectionScreen(_data),
                                         ),
                                       ).then((data) {
-                                        print(
-                                            'selected data from widget ${data.id}');
-                                        // print(data.measurement);
-                                        _parseData(data);
+                                        if (data != null) {
+                                          print(
+                                              'selected data from widget ${data.id}');
+                                          // print(data.measurement);
+                                          _parseData(data);
+                                        }
                                       });
                                     },
                                     icon: Icon(Icons.search),

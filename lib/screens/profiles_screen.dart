@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user.dart';
 import '../models/text_styles.dart';
@@ -20,6 +21,7 @@ class ProfilesScreen extends StatefulWidget {
 class _ProfilesScreenState extends State<ProfilesScreen> {
   var _index = 0;
   List<User> _users = [];
+  PageController _controller = PageController(viewportFraction: 0.3);
 
   void _startAddNewUser(BuildContext ctx) {
     showModalBottomSheet(
@@ -31,7 +33,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
     );
   }
 
-  void _addNewUser(String title) {
+  void _addNewUser(String title) async {
     final newUser = User(
       id: null,
       name: title,
@@ -50,7 +52,29 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
       ledOkColor: 120,
       ledNokColor: 0,
     );
-    SqlHelper.insertUser(newUser).then((_) => _getUsersFromDatabase());
+
+    await SqlHelper.insertUser(newUser);
+    await _getUsersFromDatabase();
+    var userIndex = _users.indexWhere((user) => user.name == newUser.name);
+    print(newUser);
+    print('userindex ------------> $userIndex');
+    _controller.jumpToPage(userIndex);
+    setState(() {
+      _index = userIndex;
+    });
+    // SqlHelper.insertUser(newUser).then((_) {
+    //   await _getUsersFromDatabase();
+    //   var userIndex = _users.indexWhere((user) => user.name == newUser.name);
+    //   print(newUser);
+    //   print(_users.where((element) => element.name == "dd"));
+    //   print('userindex ------------> $userIndex');
+
+    //   controller.jumpToPage(userIndex);
+
+    //   setState(() {
+    //     _index = userIndex;
+    //   });
+    // });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(AppLocalizations.of(context).user +
@@ -79,10 +103,20 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(AppLocalizations.of(context).no)),
               TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     SqlHelper.deleteUser(user.id)
                         .then((_) => _getUsersFromDatabase());
                     Navigator.of(context).pop(true);
+
+                    var userIndex = _users.indexWhere(
+                        (userToDelete) => userToDelete.name == user.name);
+                    _controller.jumpToPage(userIndex - 1);
+                    setState(() {
+                      _index = userIndex - 1;
+                    });
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setInt('profilesScrollIndex', userIndex - 1);
                   },
                   child: Text(AppLocalizations.of(context).yes)),
             ],
@@ -91,12 +125,25 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
     );
   }
 
-  void _getUsersFromDatabase() async {
+  Future<void> _getUsersFromDatabase() async {
     List<User> usersFromDb = await SqlHelper.getUsers();
     setState(() {
+      usersFromDb.sort((a, b) => a.name.compareTo(b.name));
       Provider.of<UsersProvider>(context, listen: false).setUsers(usersFromDb);
       _users = usersFromDb;
     });
+    // return usersFromDb;
+  }
+
+  Future<void> _getPrevScrollIndex() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var index = prefs.getInt('profilesScrollIndex');
+    if (index != null) {
+      print('userindex ------------> $index');
+      Future.delayed(Duration(milliseconds: 100), () {
+        _controller.jumpToPage(index);
+      });
+    }
   }
 
   @override
@@ -104,13 +151,32 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
     // SqlHelper.deleteDb('sensogrip');
     print('Profiles screen init');
     _getUsersFromDatabase();
+    _getPrevScrollIndex();
+    // User selectedUser =
+    //     Provider.of<UsersProvider>(context, listen: false).selectedUser;
+    // Future.delayed(Duration.zero, () {
+    //   if (selectedUser != null) {
+    //     var userIndex =
+    //         _users.indexWhere((user) => user.name == selectedUser.name);
+    //     print(selectedUser);
+    //     print('userindex ------------> $userIndex');
+    //     _controller.jumpToPage(userIndex);
+    //   }
+    // });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     SystemChrome.setEnabledSystemUIOverlays([]);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -144,8 +210,15 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                 height: size.height - 230, // card height
                 child: PageView.builder(
                   itemCount: _users.length,
-                  controller: PageController(viewportFraction: 0.3),
-                  onPageChanged: (int index) => setState(() => _index = index),
+                  controller: _controller,
+                  // restorationId: 'scroll_position',
+                  onPageChanged: (int index) async {
+                    setState(() => _index = index);
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setInt('profilesScrollIndex', index);
+                    print('index saved-------------> $index');
+                  },
                   itemBuilder: (ctx, i) {
                     return Transform.scale(
                       scale: i == _index ? 1 : 0.8,

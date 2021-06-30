@@ -9,8 +9,9 @@ class DataItem extends StatelessWidget {
   final Data data;
   final bool isSelected;
   final Function deleteData;
+  final Function saveScrollOffset;
 
-  DataItem(this.data, this.isSelected, this.deleteData);
+  DataItem(this.data, this.isSelected, this.deleteData, this.saveScrollOffset);
 
   void _selectData(context) async {
     print('Data selected ${data.userid}');
@@ -42,7 +43,10 @@ class DataItem extends StatelessWidget {
   Widget build(BuildContext context) {
     // final users = Provider.of<UsersProvider>(context, listen: false).users;
     return InkWell(
-      onTap: () => _selectData(context),
+      onTap: () {
+        _selectData(context);
+        saveScrollOffset();
+      },
       //borderRadius: BorderRadius.circular(15),
       child: Card(
         shape: RoundedRectangleBorder(
@@ -52,14 +56,15 @@ class DataItem extends StatelessWidget {
         elevation: 2,
         child: ListTile(
           minVerticalPadding: 30,
-          minLeadingWidth: 190,
+          minLeadingWidth: 250,
+
           selected: isSelected,
           // selectedTileColor: Colors.grey.shade200,
           leading: Chip(
             padding: EdgeInsets.all(10),
             label: Text(
               // '${(users.where((user) => user.id == data.userid)).first.name}',
-              '${data.username}',
+              data.username,
               style: TextStyle(
                 fontSize: 20,
               ),

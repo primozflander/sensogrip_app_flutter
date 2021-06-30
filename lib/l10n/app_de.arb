@@ -116,5 +116,17 @@
     "checkConnectionN": "Daten werden nicht in die Cloud übertragen. Bitte überprüfen Sie die Internetverbindung.",
     "provideValidNameF": "Bitte geben Sie einen gültigen Namen an.",
     "userExistsF": "Der Benutzername existiert bereits.",
-    "pencilVersion": "Stift Version"
+    "nameTooLongF": "Bitte geben Sie einen Namen an, der kürzer als 20 Zeichen ist.",
+    "pencilVersion": "Stift Version",
+    "skipBtn": "Überspringen",
+    "nextBtn": "Weiter",
+    "getStartedBtn": "Los geht's!",
+    "instantFeedbackH": "Sofortige Rückmeldung",
+    "userProfilesH": "Benutzerprofile",
+    "analyzeDataH": "Daten analysieren",
+    "cloudServiceH": "Cloud service",
+    "instantFeedbackD": "Erhalten Sie sofortiges Feedback über das Echtzeitdiagramm und die eingebaute Stift-LED.",
+    "userProfilesD": "Jeder Benutzer hat sein eigenes Profil mit seinen persönlichen Einstellungen und Messungen.",
+    "analyzeDataD": "Holen Sie sich detaillierte Statistiken zu Ihren Messungen aus der App oder exportieren Sie Ihre Daten einfach auf Ihren PC zur weiteren Analyse.",
+    "cloudServiceD": "Speichern Sie Ihre Daten sicher in der Cloud."
 }

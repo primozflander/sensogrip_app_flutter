@@ -33,7 +33,7 @@ class RealtimeChart extends StatefulWidget {
 
 class RealtimeChartState extends State<RealtimeChart>
     implements OnChartValueSelectedListener {
-  LineChartController controller;
+  LineChartController _controller;
   StreamSubscription<List<int>> streamSubscription;
 
   static const int VISIBLE_COUNT = 6000;
@@ -50,7 +50,7 @@ class RealtimeChartState extends State<RealtimeChart>
     //var desc = Description()..enabled = true;
     //desc.text = 'testis';
 
-    controller = LineChartController(
+    _controller = LineChartController(
       //extraBottomOffset: 20,
       infoTextColor: Colors.grey,
       infoTextSize: 20,
@@ -114,16 +114,16 @@ class RealtimeChartState extends State<RealtimeChart>
     );
     //description: desc);
 
-    LineData data = controller?.data;
+    LineData data = _controller?.data;
 
     if (data == null) {
       data = LineData();
-      controller.data = data;
+      _controller.data = data;
     }
   }
 
   void _addEntry(Map<String, dynamic> streamData) {
-    LineData data = controller.data;
+    LineData data = _controller.data;
     if (data != null) {
       ILineDataSet set = data.getDataSetByIndex(0);
       if (set == null) {
@@ -213,9 +213,9 @@ class RealtimeChartState extends State<RealtimeChart>
         _removalCounter++;
       }
       data.notifyDataChanged();
-      controller.setVisibleXRangeMaximum(300);
-      controller.moveViewToX(data.getEntryCount().toDouble());
-      controller.state?.setStateIfNotDispose();
+      _controller.setVisibleXRangeMaximum(300);
+      _controller.moveViewToX(data.getEntryCount().toDouble());
+      _controller.state?.setStateIfNotDispose();
     }
   }
 
@@ -229,8 +229,8 @@ class RealtimeChartState extends State<RealtimeChart>
   }
 
   void _clearChart() {
-    controller.data?.clearValues();
-    controller.state?.setStateIfNotDispose();
+    _controller.data?.clearValues();
+    _controller.state?.setStateIfNotDispose();
     // controller.viewPortHandler.fitScreen1();
   }
 
@@ -463,7 +463,7 @@ class RealtimeChartState extends State<RealtimeChart>
               //fit: FlexFit,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
-                child: LineChart(controller),
+                child: LineChart(_controller),
               ),
             ),
           ],

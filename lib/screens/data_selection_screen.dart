@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/data_item.dart';
 import '../providers/users_provider.dart';
@@ -29,6 +30,8 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
   List<Data> _data = [];
   List<Data> _filteredData = [];
   bool _isLoading = false;
+  ScrollController _controller = ScrollController(keepScrollOffset: true);
+  double _scrollOffset;
 
   Future<void> _startTransferToCLoud() async {
     setState(() {
@@ -57,6 +60,23 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
         _filteredData = _data;
       },
     );
+  }
+
+  Future<void> _getPrevScrollIndex() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var index = prefs.getDouble('dataScrollIndex');
+    if (index != null) {
+      print('dataindex ------------> $index');
+      Future.delayed(Duration(milliseconds: 100), () {
+        _controller.jumpTo(index);
+      });
+    }
+  }
+
+  void _saveScrollOffset() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setDouble('dataScrollIndex', _scrollOffset);
+    print('index saved-------------> $_scrollOffset');
   }
 
   void _deleteData(Data data) {
@@ -94,8 +114,24 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
     //SqlHelper.deleteDb('sensogrip');
     print('init data select screen');
     _getDataFromDatabase();
+    _getPrevScrollIndex();
+    _controller = ScrollController()
+      ..addListener(() {
+        _scrollOffset = _controller.offset;
+        print(
+            "offset = ${_controller.offset},${_controller.initialScrollOffset}");
+      });
+
     super.initState();
   }
+
+  // @override
+  // String get restorationId => 'data_selection_screen';
+
+  // @override
+  // void restoreState(RestorationBucket oldBucket, bool initialRestore) {
+  //   registerForRestoration(_index, 'list_view_index');
+  // }
 
   TextStyle headerStyle = TextStyle(fontSize: 18, color: Colors.white);
 
@@ -105,14 +141,14 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
       color: Colors.black87,
       child: Row(
         children: [
-          // SizedBox(width: 20),
+          SizedBox(width: 30),
           Container(
-              width: 200,
-              alignment: Alignment.center,
+              width: 235,
+              alignment: Alignment.centerLeft,
               child:
                   Text(AppLocalizations.of(context).user, style: headerStyle)),
           Container(
-              width: 165,
+              width: 160,
               alignment: Alignment.center,
               child: Text('Id', style: headerStyle)),
           Container(
@@ -133,6 +169,12 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -202,14 +244,19 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
           Container(
             height: size.height - 130,
             child: ListView.builder(
+              controller: _controller,
               itemCount: _filteredData.length,
-              reverse: true,
+              // restorationId: 'index',
+              // reverse: true,
+              // key: PageStorageKey<String>('dataSelectionList'),
               itemBuilder: (ctx, i) => DataItem(
-                  _filteredData[i],
-                  (_filteredData[i].id == widget.selectedData.id)
+                  _filteredData[_filteredData.length - 1 - i],
+                  (_filteredData[_filteredData.length - 1 - i].id ==
+                          widget.selectedData.id)
                       ? true
                       : false,
-                  _deleteData),
+                  _deleteData,
+                  _saveScrollOffset),
             ),
           ),
         ],
