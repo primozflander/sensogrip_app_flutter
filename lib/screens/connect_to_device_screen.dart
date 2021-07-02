@@ -103,6 +103,7 @@ class _ConnectToDeviceScreenState extends State<ConnectToDeviceScreen> {
 
   @override
   void initState() {
+    print('<connect to device screen init>');
     final device = Provider.of<BleProvider>(context, listen: false).bleDevice;
     _connectToDevice(device);
     super.initState();

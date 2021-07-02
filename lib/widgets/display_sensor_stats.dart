@@ -38,13 +38,13 @@ class _DisplaySensorStatsState extends State<DisplaySensorStats> {
     TextStyle textLarge = TextStyle(
       fontWeight: FontWeight.normal,
       fontSize: 50,
-      color: Theme.of(context).accentColor,
+      color: Theme.of(context).colorScheme.secondary,
       // fontFamily: 'OpenSans',
     );
     TextStyle textSmall = TextStyle(
       fontWeight: FontWeight.normal,
       fontSize: 18,
-      color: Theme.of(context).accentColor,
+      color: Theme.of(context).colorScheme.secondary,
       // fontFamily: 'OpenSans',
     );
     TextStyle title = TextStyle(

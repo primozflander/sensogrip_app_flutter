@@ -35,7 +35,7 @@ class DisplayValue extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                     fontSize: 50,
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     //fontFamily: 'Quicksand',
                   ),
                 ),

@@ -12,24 +12,22 @@ import './screens/profiles_screen.dart';
 import './screens/chart_screen.dart';
 import './screens/settings_screen.dart';
 import './screens/start_screen.dart';
-// import './screens/intro_screen.dart';
 import './screens/connect_to_device_screen.dart';
 import './screens/data_and_stats_screen.dart';
 import './screens/help_screen.dart';
 import './screens/onboarding_screen.dart';
 
-// void main() => runApp(MyApp());
 bool showOnboarding;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // await prefs.setBool('showOnboarding', null);
+  // await prefs.setBool('isLocked', null);
   showOnboarding = prefs.getBool('showOnboarding');
   if (showOnboarding == null) {
     await prefs.setBool('showOnboarding', false);
   }
-  // runApp(RootRestorationScope(restorationId: 'root', child: MyApp()));
   runApp(MyApp());
 }
 
@@ -40,6 +38,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    final ThemeData theme = ThemeData();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -48,24 +47,19 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => BleProvider(),
         ),
-        // ChangeNotifierProvider(
-        //   create: (ctx) => DataProvider(),
-        // ),
       ],
       child: MaterialApp(
-        // restorationScopeId: 'root',
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         debugShowCheckedModeBanner: false,
         title: 'Sensogrip App',
         theme: ThemeData(
+          colorScheme: theme.colorScheme
+              .copyWith(primary: Colors.green, secondary: Colors.blueAccent),
           primarySwatch: Colors.green,
-          accentColor: Colors.blueAccent,
-          accentColorBrightness: Brightness.dark,
           fontFamily: 'Quicksand',
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        // initialRoute: StartScreen.routeName,
         initialRoute: showOnboarding != null
             ? StartScreen.routeName
             : OnboardingScreen.routeName,

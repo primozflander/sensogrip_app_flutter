@@ -144,7 +144,7 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
             style: TextStyle(
               fontWeight: FontWeight.normal,
               fontSize: 22,
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
         ],

@@ -43,6 +43,8 @@
     "overpressureFeedback": "Overpressure feedback",
     "negativeFeedback": "Negative feedback",
     "dynamicRange": "Adapt ranges dynamically?",
+    "angleCorrection": "Pencil angle correction?",
+    "angleCorrectionD": "When turned on, sensor values will be angle compensated",
     "positiveFeedbackColor": "Positive feedback color",
     "negativeFeedbackColor": "Negative feedback color",
     "simpleAssistanceColor": "Assistance color",
@@ -128,5 +130,8 @@
     "instantFeedbackD": "Get instant feedback via real-time chart and built-in pencil LED.",
     "userProfilesD": "Each user has their own profile, with their own personalized settings and measurements.",
     "analyzeDataD": "Get detailed statistics of your measurements from the App or simply export your data to your PC for further analysis.",
-    "cloudServiceD": "Save your data securely to the cloud."
+    "cloudServiceD": "Save your data securely to the cloud.",
+    "lockedFeaturesD": "Some features of the App are currently locked. Enter the correct code to unlock the full experience.",
+    "enterPassword": "Enter password",
+    "passwordF": "Password is not valid."
 }

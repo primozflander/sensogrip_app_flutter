@@ -385,11 +385,11 @@ class ScanResultTile extends StatelessWidget {
       leading: Text(result.rssi.toString()),
       trailing: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: Theme.of(context).accentColor,
+          primary: Theme.of(context).colorScheme.secondary,
           onPrimary: Colors.white,
         ),
         child: Text(AppLocalizations.of(context).connect),
-        // color: Theme.of(context).accentColor,
+        // color: Theme.of(context).colorScheme.secondary,
         // textColor: Colors.white,
         onPressed: (result.advertisementData.connectable) ? onTap : null,
       ),

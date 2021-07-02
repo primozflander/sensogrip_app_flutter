@@ -17,7 +17,7 @@ class AddUser extends StatefulWidget {
 class _AddUserState extends State<AddUser> {
   final _form = GlobalKey<FormState>();
 
-  void _submitData() async {
+  void _submitData() {
     final isValid = _form.currentState.validate();
     if (!isValid) {
       return;
@@ -92,7 +92,7 @@ class _AddUserState extends State<AddUser> {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).accentColor,
+                primary: Theme.of(context).colorScheme.secondary,
               ),
               onPressed: () => _submitData(),
             ),

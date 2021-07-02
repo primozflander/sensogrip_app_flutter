@@ -21,6 +21,7 @@ class _InfoScreenState extends State<InfoScreen> {
 
   @override
   void initState() {
+    print('<info screen init>');
     _secondsInUse = Provider.of<BleProvider>(context, listen: false)
         .findReceivedDataByName('secondsInUse');
     _secondsInRange = Provider.of<BleProvider>(context, listen: false)
@@ -108,7 +109,7 @@ class _InfoScreenState extends State<InfoScreen> {
                     },
                     child: Text(AppLocalizations.of(context).reset),
                     style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).accentColor,
+                      primary: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ),
@@ -160,7 +161,7 @@ class _InfoScreenState extends State<InfoScreen> {
                     },
                     child: Text(AppLocalizations.of(context).reset),
                     style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).accentColor,
+                      primary: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ),

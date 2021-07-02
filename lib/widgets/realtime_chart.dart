@@ -44,14 +44,9 @@ class RealtimeChartState extends State<RealtimeChart>
   bool _drawAngle = false;
   bool _drawSpeed = false;
   bool _isRecording = false;
-  //File file;
 
   void _initController() {
-    //var desc = Description()..enabled = true;
-    //desc.text = 'testis';
-
     _controller = LineChartController(
-      //extraBottomOffset: 20,
       infoTextColor: Colors.grey,
       infoTextSize: 20,
       noDataText: AppLocalizations.of(context).noStream,
@@ -59,49 +54,30 @@ class RealtimeChartState extends State<RealtimeChart>
       highlightPerDragEnabled: false,
       legendSettingFunction: (legend, controller) {
         legend
-          //..horizontalAlignment = LegendHorizontalAlignment.RIGHT
           ..shape = LegendForm.DEFAULT
           ..typeface = TypeFace(fontFamily: 'Quicksand')
           ..textSize = 20
-          //..verticalAlignment = LegendVerticalAlignment.BOTTOM
           ..yOffset = 3.0
           ..xOffset = 0
           ..textColor = Colors.black;
       },
       xAxisSettingFunction: (xAxis, controller) {
         xAxis
-          //..typeface = Util.LIGHT
-          //..gridColor = Colors.white //
           ..textColor = Colors.black
           ..drawGridLines = true
-          //..avoidFirstLastClipping = true
-          //..entryCount = 50
-          //..axisMinimum = 0.0
           ..enabled = true;
       },
       axisLeftSettingFunction: (axisLeft, controller) {
-        axisLeft
-          //..typeface = Util.LIGHT
-          //..textColor = Colors.black
-          //..axisMaximum = 100.0
-          //..axisMinimum = 0.0
-          ..enabled = false;
-        //..drawGridLines = true;
+        axisLeft..enabled = false;
       },
       axisRightSettingFunction: (axisRight, controller) {
-        axisRight
-          //..axisMinimum = 0.0
-          ..enabled = true;
+        axisRight..enabled = true;
       },
       drawBorders: true,
       borderColor: Colors.grey,
       borderStrokeWidth: 0.3,
-      // extraBottomOffset: 15,
       extraBottomOffset: 15,
-
-      //maxVisibleCount: 100,
       drawGridBackground: false,
-      //backgroundColor: ColorUtils.LTGRAY,
       backgroundColor: Colors.white,
       selectionListener: this,
       pinchZoomEnabled: false,
@@ -110,12 +86,8 @@ class RealtimeChartState extends State<RealtimeChart>
       scaleYEnabled: true,
       dragXEnabled: true,
       dragYEnabled: true,
-      //borderColor: Colors.black,
     );
-    //description: desc);
-
     LineData data = _controller?.data;
-
     if (data == null) {
       data = LineData();
       _controller.data = data;
@@ -240,7 +212,7 @@ class RealtimeChartState extends State<RealtimeChart>
         return Colors.grey;
         break;
       case 1:
-        return Theme.of(context).accentColor;
+        return Theme.of(context).colorScheme.secondary;
         break;
       case 2:
         return Theme.of(context).primaryColor;
@@ -391,7 +363,7 @@ class RealtimeChartState extends State<RealtimeChart>
                     style: ElevatedButton.styleFrom(
                       shape: CircleBorder(),
                       primary: _drawAngle
-                          ? Theme.of(context).accentColor
+                          ? Theme.of(context).colorScheme.secondary
                           : Colors.grey,
                     ),
                     child: Text(
@@ -417,7 +389,7 @@ class RealtimeChartState extends State<RealtimeChart>
                     style: ElevatedButton.styleFrom(
                       shape: CircleBorder(),
                       primary: _drawSpeed
-                          ? Theme.of(context).accentColor
+                          ? Theme.of(context).colorScheme.secondary
                           : Colors.grey,
                     ),
                     child: Text(
@@ -439,7 +411,7 @@ class RealtimeChartState extends State<RealtimeChart>
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: _isRecording
-                      ? Theme.of(context).accentColor
+                      ? Theme.of(context).colorScheme.secondary
                       : Colors.grey,
                   child: IconButton(
                       icon: Icon(Icons.fiber_manual_record),
@@ -460,7 +432,6 @@ class RealtimeChartState extends State<RealtimeChart>
               height: 5,
             ),
             Expanded(
-              //fit: FlexFit,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
                 child: LineChart(_controller),

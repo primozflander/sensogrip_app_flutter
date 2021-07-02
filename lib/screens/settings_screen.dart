@@ -120,6 +120,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void initState() {
+    print('<settings screen init>');
     _readConfigurationState();
     super.initState();
   }
@@ -190,12 +191,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     FeedbackType value,
   ) {
     return Container(
-      // padding: EdgeInsets.all(15),
       margin: EdgeInsets.all(5),
       width: 180,
-      // color: Colors.grey.shade200,
       decoration: BoxDecoration(
-        // shape: BoxShape.rectangle,
         borderRadius: BorderRadius.all(Radius.circular(10)),
         color: Colors.grey.shade100,
       ),
@@ -203,14 +201,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           Radio(
             value: value,
+            activeColor: Colors.blueAccent,
             groupValue: _selectedFeedback,
             onChanged: (FeedbackType value) {
-              // value == FeedbackType.negativeFeedback
-              //     ? _isPositiveFeedback = 0
-              //     : _isPositiveFeedback = 1;
-              // value == FeedbackType.negativeFeedback
-              //     ? _feedbackType = 1
-              //     : _feedbackType = Functions.feedbackTypeToInt(value);
               _isPositiveFeedback = 1;
               _feedbackType = Functions.feedbackTypeToInt(value);
               print(Functions.feedbackTypeToInt(value));
@@ -481,8 +474,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                             if (isAdmin)
                               _buildSwitchTile(
-                                'Pencil angle correction?',
-                                'When turned on, sensor values will be angle compensated',
+                                AppLocalizations.of(context).angleCorrection,
+                                AppLocalizations.of(context).angleCorrectionD,
                                 _angleCorrectionSwitch,
                                 (value) {
                                   setState(

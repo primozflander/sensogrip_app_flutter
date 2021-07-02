@@ -13,17 +13,11 @@ import '../screens/chart_screen.dart';
 class UserItem extends StatelessWidget {
   final User user;
   final Function deleteUser;
+  final bool isEnabled;
 
-  UserItem(this.user, this.deleteUser);
+  UserItem(this.user, this.deleteUser, this.isEnabled);
 
   void _selectUser(context) async {
-    // Navigator.of(context).pop();
-    // Navigator.of(context).pushNamed(ChartScreen.routeName);
-
-    // if (Provider.of<UsersProvider>(context, listen: false).selectedUser.id ==
-    //     null)
-    //   Navigator.of(context).pushNamed(ChartScreen.routeName);
-    // else
     Navigator.of(context).pushReplacementNamed(ChartScreen.routeName);
     Provider.of<UsersProvider>(context, listen: false).setSelectedUser(user);
     var configurationState =
@@ -46,7 +40,7 @@ class UserItem extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.normal,
               fontSize: 26,
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
         ],
@@ -99,7 +93,7 @@ class UserItem extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.normal,
                 fontSize: 20,
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
           ],
@@ -108,21 +102,21 @@ class UserItem extends StatelessWidget {
     }
 
     return InkWell(
-      onTap: () => _selectUser(context),
+      onTap: () => isEnabled ? _selectUser(context) : null,
       splashColor: Theme.of(context).primaryColor,
-      //borderRadius: BorderRadius.circular(15),
       child: Card(
+        shadowColor: isEnabled ? Colors.white : Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
+          side: isEnabled
+              ? BorderSide(color: Colors.blue, width: 2)
+              : BorderSide.none,
         ),
         margin: EdgeInsets.all(5),
         elevation: 2,
         child: Column(
-          //mainAxisSize: MainAxisSize.min,
-          //mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             ClipRRect(
-              //borderRadius: BorderRadius.circular(15.0),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10.0),
                 topRight: Radius.circular(10.0),
@@ -132,7 +126,6 @@ class UserItem extends StatelessWidget {
                 color: Colors.grey.shade200,
                 alignment: Alignment.center,
                 child: ListTile(
-                  //selected: true,
                   leading: CircleAvatar(
                     backgroundColor: Functions.intToColor(user.ledOkColor),
                     radius: 30,
