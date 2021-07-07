@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_blue/gen/flutterblue.pbjson.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +11,9 @@ import 'package:camera/camera.dart';
 import 'package:screen_recorder_flutter/screen_recorder_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
+import 'package:sensogrip_app/screens/connect_to_device_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 
 import '../widgets/realtime_chart.dart';
 import '../widgets/display_data_and_stats.dart';
@@ -43,6 +46,7 @@ class _ChartScreenState extends State<ChartScreen> {
   bool _isCameraReady = false;
   CameraController _controller;
   List<String> _currentMeasurements = [];
+  StreamSubscription<BluetoothDeviceState> bleConnectionStateSubscription;
 
   void _checkIfLocked() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -52,7 +56,6 @@ class _ChartScreenState extends State<ChartScreen> {
     }
     setState(() {});
     print('lock status: $_isLocked');
-    // setState(() {});
   }
 
   void _unlock() async {
@@ -179,8 +182,17 @@ class _ChartScreenState extends State<ChartScreen> {
 
   void _initCamera() async {
     List<CameraDescription> cameras = await availableCameras();
-    print('camera: $cameras');
+    final orientation = await NativeDeviceOrientationCommunicator()
+        .orientation(useSensor: true);
+    DeviceOrientation camOrientaion;
+    if (orientation == NativeDeviceOrientation.landscapeRight) {
+      camOrientaion = DeviceOrientation.landscapeLeft;
+    } else {
+      camOrientaion = DeviceOrientation.landscapeRight;
+    }
+    print('orientation:-------------> $orientation $camOrientaion');
     _controller = CameraController(cameras.first, ResolutionPreset.max);
+    _controller.lockCaptureOrientation(camOrientaion);
     _controller.initialize().then(
       (_) {
         if (!mounted) {
@@ -191,16 +203,6 @@ class _ChartScreenState extends State<ChartScreen> {
         });
       },
     );
-    final orientation =
-        await NativeDeviceOrientationCommunicator().orientation();
-    print('orientation:-------------> $orientation');
-    DeviceOrientation camOrientaion;
-    if (orientation == NativeDeviceOrientation.landscapeRight) {
-      camOrientaion = DeviceOrientation.landscapeLeft;
-    } else {
-      camOrientaion = DeviceOrientation.landscapeRight;
-    }
-    _controller.lockCaptureOrientation(camOrientaion);
   }
 
   Future<void> _initScreenRecorder() async {
@@ -209,6 +211,26 @@ class _ChartScreenState extends State<ChartScreen> {
     }, onRecodingCompleted: (path) {
       print("Recording completed $path");
     });
+  }
+
+  void _addBleConnectionListener() {
+    var bleDevice = Provider.of<BleProvider>(context).bleDevice;
+    bleConnectionStateSubscription = bleDevice.state.listen(
+      (connectionState) async {
+        print('Event: BLE conection state state: $connectionState');
+        if (connectionState == BluetoothDeviceState.disconnected) {
+          bleConnectionStateSubscription.cancel().then(
+            (_) {
+              bleDevice.disconnect();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute<void>(
+                      builder: (BuildContext context) => StartScreen()),
+                  ModalRoute.withName(StartScreen.routeName));
+            },
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -226,10 +248,15 @@ class _ChartScreenState extends State<ChartScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    _addBleConnectionListener();
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final bleData = Provider.of<BleProvider>(context);
-    // _checkIfLocked();
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -258,13 +285,19 @@ class _ChartScreenState extends State<ChartScreen> {
               icon: Icon(Icons.more_vert),
               itemBuilder: (_) => [
                 PopupMenuItem(
-                  child:
-                      Text(AppLocalizations.of(context).displayRealtimeChart),
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    AppLocalizations.of(context).displayRealtimeChart,
+                    // style: TextStyle(fontSize: 14),
+                  ),
                   value: ViewOptions.ShowChart,
                 ),
                 PopupMenuItem(
-                  child: Text(AppLocalizations.of(context)
-                      .displayRealtimeChartAndVideo),
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    AppLocalizations.of(context).displayRealtimeChartAndVideo,
+                    // style: TextStyle(fontSize: 14),
+                  ),
                   value: ViewOptions.ShowChartAndCamera,
                 ),
               ],

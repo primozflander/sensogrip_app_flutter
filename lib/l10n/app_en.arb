@@ -54,6 +54,8 @@
     "resetSettingsToDefaultQ": "All settings will be lost. Reset?",
     "calibrateSensors": "Calibrate sensors",
     "calibrateSensorsQ": "Make sure that you are not pressing on any of the sensors. Calibrate?",
+    "lockApp": "Lock the App",
+    "lockAppQ": "Are you sure you want to lock the App?",
     "positiveFeedbackD": "When turned on, LED will light up when sensors are in range",
     "dynamicRangeD": "When turned on, sensor ranges will be dynamically adjusted according to the user's performance",
     "noDataToDisplay": "No data to display!",

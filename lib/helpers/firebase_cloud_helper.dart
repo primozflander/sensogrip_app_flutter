@@ -62,16 +62,16 @@ class FirebaseCloudHelper {
       String user, List<Data> data) async {
     DateTime timeStamp = DateTime.now();
     String formattedDate = DateFormat('yyyy-dd-MM-kk-mm-ss').format(timeStamp);
-    print(formattedDate);
-    print('$user$formattedDate');
-    print('data: $data');
+    // print(formattedDate);
+    // print('$user$formattedDate');
+    // print('data: $data');
     user = user + '/$formattedDate';
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) return true;
     var authToken = await login();
     // final response = await deleteCloudData(user, authToken);
     // if (response == true) return true;
-    print('------------<hereeee');
+    // print('------------<hereeee');
     data.forEach((element) {
       transferDataToCloud(user, element, authToken);
     });

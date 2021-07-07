@@ -179,7 +179,7 @@ class _InfoScreenState extends State<InfoScreen> {
                     size: 26,
                   ),
                   title:
-                      Text(AppLocalizations.of(context).appVersion + ': 1.6.0'),
+                      Text(AppLocalizations.of(context).appVersion + ': 1.6.1'),
                 ),
                 ListTile(
                   leading: Icon(

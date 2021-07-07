@@ -86,7 +86,7 @@ class AppDrawer extends StatelessWidget {
             Icons.help,
             () {
               Navigator.of(context).pop(true);
-              // Navigator.of(context).pushNamed(HelpScreen.routeName);
+              Navigator.of(context).pushNamed(HelpScreen.routeName);
             },
           ),
           Expanded(child: Container()),

@@ -18,4 +18,22 @@ class TextStyles {
     fontSize: 18,
     color: Colors.grey,
   );
+
+  static final TextStyle sensorCardValueLarge = TextStyle(
+    fontWeight: FontWeight.normal,
+    fontSize: 46,
+    color: Colors.blueAccent,
+  );
+
+  static final TextStyle sensorCardValueSmall = TextStyle(
+    fontWeight: FontWeight.normal,
+    fontSize: 16,
+    color: Colors.blueAccent,
+  );
+
+  static final TextStyle sensorCardTitle = TextStyle(
+    fontWeight: FontWeight.normal,
+    fontSize: 16,
+    color: Colors.black,
+  );
 }

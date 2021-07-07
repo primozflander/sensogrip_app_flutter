@@ -54,6 +54,8 @@
     "resetSettingsToDefaultQ": "Alle Einstellungen gehen dabei verloren. Zurücksetzen?",
     "calibrateSensors": "Kalibrierung der Sensoren",
     "calibrateSensorsQ": "Stellen Sie sicher, dass Sie nicht auf einen der Sensoren drücken. Kalibrieren?",
+    "lockApp": "App sperren",
+    "lockAppQ": "Sind Sie sicher, dass Sie die App sperren wollen?",
     "positiveFeedbackD": "Bei aktivierter Einstellung leuchten die LEDs, wenn sich die Sensoren innerhalb des Grenzwertes befinden",
     "dynamicRangeD": "Bei aktivierter Einstellung werden die Sensorwertebereiche dynamisch an das Benutzerverhalten angepasst",
     "noDataToDisplay": "Keine Daten vorhanden!",

@@ -28,33 +28,35 @@ class _ConnectToDeviceScreenState extends State<ConnectToDeviceScreen> {
       _pop();
       return;
     }
-
     Timer(
       const Duration(seconds: 5),
       () {
         if (!_isReady) {
-          _disconnectFromDevice(device);
+          device.disconnect();
           _pop();
         }
       },
     );
 
-    await device.connect().then((_) => _discoverServices(device));
+    await device
+        .connect(autoConnect: false)
+        .then((_) => _discoverServices(device));
   }
 
-  void _disconnectFromDevice(device) {
-    if (device == null) {
-      _pop();
-      return;
-    }
-    device.disconnect();
-  }
+  // void _disconnectFromDevice(device) {
+  //   if (device == null) {
+  //     _pop();
+  //     return;
+  //   }
+  //   device.disconnect();
+  // }
 
   Future _discoverServices(BluetoothDevice device) async {
     if (device == null) {
       _pop();
       return;
     }
+
     final bleCharProvider = Provider.of<BleProvider>(context, listen: false);
     List<BluetoothService> services = await device.discoverServices();
     for (BluetoothService service in services) {

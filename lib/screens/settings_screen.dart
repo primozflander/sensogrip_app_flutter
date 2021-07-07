@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:sensogrip_app/screens/chart_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/custom_color_picker.dart';
 import '../models/text_styles.dart';
@@ -221,6 +223,163 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildResetToDefaultsButton() {
+    return TextButton.icon(
+      label: Text(
+        AppLocalizations.of(context).resetSettingsToDefault,
+      ),
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).errorColor,
+      ),
+      icon: Icon(
+        Icons.settings_backup_restore,
+        size: 32,
+      ),
+      onPressed: () => {
+        showDialog(
+          context: context,
+          builder: (context) =>
+              AlertDialog(
+                title: Text(
+                  AppLocalizations.of(context).resetSettingsToDefault,
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.black,
+                  ),
+                ),
+                content:
+                    Text(AppLocalizations.of(context).resetSettingsToDefaultQ),
+                actions: <Widget>[
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text(AppLocalizations.of(context).no)),
+                  TextButton(
+                      onPressed: () {
+                        _tipSensorUpperRange = 170;
+                        _tipSensorLowerRange = 30;
+                        _fingerSensorUpperRange = 170;
+                        _fingerSensorLowerRange = 30;
+                        _isPositiveFeedback = 1;
+                        _feedbackType = 1;
+                        _isAIon = 0;
+                        _isAngleCorrected = 1;
+                        _ledSimpleAssistanceColor = 240;
+                        _ledTipAssistanceColor = 180;
+                        _ledFingerAssistanceColor = 300;
+                        _ledOkColor = 120;
+                        _ledNokColor = 0;
+                        _setControlsState();
+                        _writeConfigurationState();
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text(AppLocalizations.of(context).yes)),
+                ],
+              ) ??
+              false,
+        )
+      },
+    );
+  }
+
+  Widget _buildCalibrateButton() {
+    return TextButton.icon(
+      label: Text(
+        AppLocalizations.of(context).calibrateSensors,
+      ),
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).errorColor,
+      ),
+      icon: Icon(
+        Icons.tune,
+        size: 32,
+      ),
+      onPressed: () => {
+        showDialog(
+          context: context,
+          builder: (context) =>
+              AlertDialog(
+                title: Text(
+                  AppLocalizations.of(context).calibrateSensors,
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.black,
+                  ),
+                ),
+                content: Text(AppLocalizations.of(context).calibrateSensorsQ),
+                actions: <Widget>[
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text(AppLocalizations.of(context).no)),
+                  TextButton(
+                      onPressed: () {
+                        _writeToChar(
+                          Provider.of<BleProvider>(context, listen: false)
+                              .findByName(Uuid.calibrate),
+                          0,
+                        );
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text(AppLocalizations.of(context).yes)),
+                ],
+              ) ??
+              false,
+        )
+      },
+    );
+  }
+
+  Widget _buildLockButton() {
+    return TextButton.icon(
+      label: Text(
+        AppLocalizations.of(context).lockApp,
+      ),
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).errorColor,
+      ),
+      icon: Icon(
+        Icons.lock,
+        size: 32,
+      ),
+      onPressed: () => {
+        showDialog(
+          context: context,
+          builder: (context) =>
+              AlertDialog(
+                title: Text(
+                  AppLocalizations.of(context).lockApp,
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.black,
+                  ),
+                ),
+                content: Text(AppLocalizations.of(context).lockAppQ),
+                actions: <Widget>[
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text(AppLocalizations.of(context).no)),
+                  TextButton(
+                      onPressed: () async {
+                        _isPositiveFeedback = 1;
+                        _feedbackType = Functions.feedbackTypeToInt(
+                            FeedbackType.noFeedback);
+                        print(Functions.feedbackTypeToInt(
+                            FeedbackType.noFeedback));
+                        _writeConfigurationState();
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.setBool('isLocked', true).then((value) =>
+                            Navigator.of(context)
+                                .pushReplacementNamed(ChartScreen.routeName));
+                      },
+                      child: Text(AppLocalizations.of(context).yes)),
+                ],
+              ) ??
+              false,
+        )
+      },
     );
   }
 
@@ -578,133 +737,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            TextButton.icon(
-                              label: Text(
-                                AppLocalizations.of(context)
-                                    .resetSettingsToDefault,
-                              ),
-                              style: TextButton.styleFrom(
-                                primary: Theme.of(context).errorColor,
-                                textStyle:
-                                    Theme.of(context).textTheme.bodyText1,
-                              ),
-                              icon: Icon(
-                                Icons.settings_backup_restore,
-                                size: 32,
-                              ),
-                              onPressed: () => {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) =>
-                                      AlertDialog(
-                                        title: Text(
-                                          AppLocalizations.of(context)
-                                              .resetSettingsToDefault,
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        content: Text(
-                                            AppLocalizations.of(context)
-                                                .resetSettingsToDefaultQ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(false),
-                                              child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .no)),
-                                          TextButton(
-                                              onPressed: () {
-                                                _tipSensorUpperRange = 170;
-                                                _tipSensorLowerRange = 30;
-                                                _fingerSensorUpperRange = 170;
-                                                _fingerSensorLowerRange = 30;
-                                                _isPositiveFeedback = 1;
-                                                _feedbackType = 1;
-                                                _isAIon = 0;
-                                                _isAngleCorrected = 1;
-                                                _ledSimpleAssistanceColor = 240;
-                                                _ledTipAssistanceColor = 180;
-                                                _ledFingerAssistanceColor = 300;
-                                                _ledOkColor = 120;
-                                                _ledNokColor = 0;
-                                                _setControlsState();
-                                                _writeConfigurationState();
-                                                Navigator.of(context).pop(true);
-                                              },
-                                              child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .yes)),
-                                        ],
-                                      ) ??
-                                      false,
-                                )
-                              },
-                            ),
+                            _buildResetToDefaultsButton(),
                             SizedBox(
                               height: 10,
                             ),
-                            TextButton.icon(
-                              label: Text(
-                                AppLocalizations.of(context).calibrateSensors,
-                              ),
-                              style: TextButton.styleFrom(
-                                primary: Theme.of(context).errorColor,
-                                textStyle:
-                                    Theme.of(context).textTheme.bodyText1,
-                              ),
-                              icon: Icon(
-                                Icons.tune,
-                                size: 32,
-                              ),
-                              onPressed: () => {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) =>
-                                      AlertDialog(
-                                        title: Text(
-                                          AppLocalizations.of(context)
-                                              .calibrateSensors,
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        content: Text(
-                                            AppLocalizations.of(context)
-                                                .calibrateSensorsQ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(false),
-                                              child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .no)),
-                                          TextButton(
-                                              onPressed: () {
-                                                _writeToChar(
-                                                  Provider.of<BleProvider>(
-                                                          context,
-                                                          listen: false)
-                                                      .findByName(
-                                                          Uuid.calibrate),
-                                                  0,
-                                                );
-                                                Navigator.of(context).pop(true);
-                                              },
-                                              child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .yes)),
-                                        ],
-                                      ) ??
-                                      false,
-                                )
-                              },
+                            _buildCalibrateButton(),
+                            SizedBox(
+                              height: 10,
                             ),
+                            _buildLockButton(),
                           ],
                         ),
                       ),
