@@ -10,12 +10,13 @@ import 'package:camera/camera.dart';
 import 'package:screen_recorder_flutter/screen_recorder_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/realtime_chart.dart';
 import '../widgets/display_data_and_stats.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/display_locked.dart';
 import '../models/data.dart';
-import './start_screen.dart';
 import '../models/text_styles.dart';
 import '../helpers/functions.dart';
 import '../helpers/sql_helper.dart';
@@ -37,13 +38,32 @@ class ChartScreen extends StatefulWidget {
 class _ChartScreenState extends State<ChartScreen> {
   bool _isRecording = false;
   bool _isCameraOn = false;
-  CameraController controller;
+  bool _isLocked = true;
   bool _isCameraReady = false;
-  List<String> currentMeasurements = [];
+  CameraController _controller;
+  List<String> _currentMeasurements = [];
+
+  void _checkIfLocked() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _isLocked = prefs.getBool('isLocked');
+    if (_isLocked == null) {
+      _isLocked = true;
+    }
+    setState(() {});
+    print('lock status: $_isLocked');
+  }
+
+  void _unlock() async {
+    setState(() {
+      _isLocked = false;
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLocked', false);
+  }
 
   void _saveData() async {
     if (_isRecording == false) {
-      currentMeasurements = [];
+      _currentMeasurements = [];
       _isRecording = true;
       if (_isCameraOn) {
         ScreenRecorderFlutter.startScreenRecord;
@@ -70,9 +90,9 @@ class _ChartScreenState extends State<ChartScreen> {
                 .name
                 .substring(9);
             _saveMeasurementToDb(
-                currentMeasurements, measurementDescription, pencilName);
+                _currentMeasurements, measurementDescription, pencilName);
             _saveMeasurementToFile(
-                currentMeasurements, measurementDescription, pencilName);
+                _currentMeasurements, measurementDescription, pencilName);
           }
         },
       );
@@ -80,7 +100,7 @@ class _ChartScreenState extends State<ChartScreen> {
   }
 
   void _addMeasurementPoint(Map<String, dynamic> data) {
-    currentMeasurements.add(
+    _currentMeasurements.add(
         '${data['timestamp']},${data['tipSensorValue']},${data['tipSensorUpperRange']},${data['tipSensorLowerRange']},${data['fingerSensorValue']},${data['fingerSensorUpperRange']},${data['fingerSensorLowerRange']},${data['angle']},${data['speed']},${data['accX']},${data['accY']},${data['accZ']},${data['gyroX']},${data['gyroY']},${data['gyroZ']}');
   }
 
@@ -114,6 +134,7 @@ class _ChartScreenState extends State<ChartScreen> {
     );
     await getExternalStorageDirectory().then(
       (directory) {
+        print(directory);
         File file = File(
             '${directory.path}/${description}_${pencilName}_${userName}_$formattedDate.txt');
         file.writeAsString(data.join('\n'), mode: FileMode.write);
@@ -143,9 +164,9 @@ class _ChartScreenState extends State<ChartScreen> {
                     final device =
                         Provider.of<BleProvider>(context, listen: false)
                             .bleDevice;
-                    Navigator.of(context).pop(true);
-                    Navigator.of(context)
-                        .pushReplacementNamed(StartScreen.routeName);
+                    // Navigator.of(context).pop(true);
+                    // Navigator.of(context)
+                    //     .pushReplacementNamed(ConnectToDeviceScreen.routeName);
                     device.disconnect();
                   },
                   child: Text(AppLocalizations.of(context).yes)),
@@ -157,9 +178,18 @@ class _ChartScreenState extends State<ChartScreen> {
 
   void _initCamera() async {
     List<CameraDescription> cameras = await availableCameras();
-    print('camera: $cameras');
-    controller = CameraController(cameras.first, ResolutionPreset.max);
-    controller.initialize().then(
+    final orientation = await NativeDeviceOrientationCommunicator()
+        .orientation(useSensor: true);
+    DeviceOrientation camOrientaion;
+    if (orientation == NativeDeviceOrientation.landscapeRight) {
+      camOrientaion = DeviceOrientation.landscapeLeft;
+    } else {
+      camOrientaion = DeviceOrientation.landscapeRight;
+    }
+    print('orientation:-------------> $orientation $camOrientaion');
+    _controller = CameraController(cameras.first, ResolutionPreset.max);
+    _controller.lockCaptureOrientation(camOrientaion);
+    _controller.initialize().then(
       (_) {
         if (!mounted) {
           return;
@@ -169,16 +199,6 @@ class _ChartScreenState extends State<ChartScreen> {
         });
       },
     );
-    final orientation =
-        await NativeDeviceOrientationCommunicator().orientation();
-    print('orientation:-------------> $orientation');
-    DeviceOrientation camOrientaion;
-    if (orientation == NativeDeviceOrientation.landscapeRight) {
-      camOrientaion = DeviceOrientation.landscapeLeft;
-    } else {
-      camOrientaion = DeviceOrientation.landscapeRight;
-    }
-    controller.lockCaptureOrientation(camOrientaion);
   }
 
   Future<void> _initScreenRecorder() async {
@@ -189,16 +209,37 @@ class _ChartScreenState extends State<ChartScreen> {
     });
   }
 
+  // void _addBleConnectionListener() {
+  //   var bleDevice = Provider.of<BleProvider>(context).bleDevice;
+  //   bleConnectionStateSubscription = bleDevice.state.listen(
+  //     (connectionState) async {
+  //       print('Event: BLE conection state state: $connectionState');
+  //       if (connectionState == BluetoothDeviceState.disconnected) {
+  //         bleConnectionStateSubscription.cancel().then(
+  //           (_) {
+  //             bleDevice.disconnect();
+  //             Navigator.of(context).pushAndRemoveUntil(
+  //                 MaterialPageRoute<void>(
+  //                     builder: (BuildContext context) => BLECheckScreen()),
+  //                 ModalRoute.withName(BLECheckScreen.routeName));
+  //           },
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
+
   @override
   void dispose() {
-    controller?.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
-    // _initCamera();
+    print('<chart screen init>');
     _initScreenRecorder();
+    _checkIfLocked();
     super.initState();
   }
 
@@ -234,33 +275,41 @@ class _ChartScreenState extends State<ChartScreen> {
               icon: Icon(Icons.more_vert),
               itemBuilder: (_) => [
                 PopupMenuItem(
-                  child:
-                      Text(AppLocalizations.of(context).displayRealtimeChart),
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    AppLocalizations.of(context).displayRealtimeChart,
+                    // style: TextStyle(fontSize: 14),
+                  ),
                   value: ViewOptions.ShowChart,
                 ),
                 PopupMenuItem(
-                  child: Text(AppLocalizations.of(context)
-                      .displayRealtimeChartAndVideo),
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    AppLocalizations.of(context).displayRealtimeChartAndVideo,
+                    // style: TextStyle(fontSize: 14),
+                  ),
                   value: ViewOptions.ShowChartAndCamera,
                 ),
               ],
             ),
           ],
         ),
-        drawer: AppDrawer(_onWillPop),
+        drawer: AppDrawer(_isLocked, _onWillPop),
         body: Column(
           children: [
             Expanded(
               child: Row(
                 children: [
-                  RealtimeChart(
-                    bleData.streamController,
-                    _saveData,
-                    _isCameraOn,
-                  ),
+                  _isLocked == false
+                      ? RealtimeChart(
+                          bleData.streamController,
+                          _saveData,
+                          _isCameraOn,
+                        )
+                      : DisplayLocked(_saveData, _isCameraOn, _unlock),
                   if (_isCameraOn &&
                       _isCameraReady &&
-                      controller.value.isInitialized)
+                      _controller.value.isInitialized)
                     Expanded(
                       child: Container(
                         margin: EdgeInsets.only(
@@ -272,7 +321,7 @@ class _ChartScreenState extends State<ChartScreen> {
                           child: Transform.scale(
                             scale: 2,
                             child: Center(
-                              child: CameraPreview(controller),
+                              child: CameraPreview(_controller),
                             ),
                           ),
                         ),

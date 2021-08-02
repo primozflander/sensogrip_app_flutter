@@ -19,7 +19,7 @@ class ProfilesScreen extends StatefulWidget {
 }
 
 class _ProfilesScreenState extends State<ProfilesScreen> {
-  var _index = 0;
+  int _index = 0;
   List<User> _users = [];
   PageController _controller = PageController(viewportFraction: 0.3);
 
@@ -34,6 +34,8 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
   }
 
   void _addNewUser(String title) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var isLocked = prefs.getBool('isLocked');
     final newUser = User(
       id: null,
       name: title,
@@ -43,7 +45,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
       fingerSensorUpperRange: 170,
       fingerSensorLowerRange: 30,
       isPositiveFeedback: 1,
-      feedbackType: 4,
+      feedbackType: isLocked != false ? 0 : 4,
       isAIon: 0,
       isAngleCorrected: 1,
       ledSimpleAssistanceColor: 240,
@@ -56,25 +58,11 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
     await SqlHelper.insertUser(newUser);
     await _getUsersFromDatabase();
     var userIndex = _users.indexWhere((user) => user.name == newUser.name);
-    print(newUser);
     print('userindex ------------> $userIndex');
     _controller.jumpToPage(userIndex);
     setState(() {
       _index = userIndex;
     });
-    // SqlHelper.insertUser(newUser).then((_) {
-    //   await _getUsersFromDatabase();
-    //   var userIndex = _users.indexWhere((user) => user.name == newUser.name);
-    //   print(newUser);
-    //   print(_users.where((element) => element.name == "dd"));
-    //   print('userindex ------------> $userIndex');
-
-    //   controller.jumpToPage(userIndex);
-
-    //   setState(() {
-    //     _index = userIndex;
-    //   });
-    // });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(AppLocalizations.of(context).user +
@@ -107,7 +95,6 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                     SqlHelper.deleteUser(user.id)
                         .then((_) => _getUsersFromDatabase());
                     Navigator.of(context).pop(true);
-
                     var userIndex = _users.indexWhere(
                         (userToDelete) => userToDelete.name == user.name);
                     _controller.jumpToPage(userIndex - 1);
@@ -132,37 +119,29 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
       Provider.of<UsersProvider>(context, listen: false).setUsers(usersFromDb);
       _users = usersFromDb;
     });
-    // return usersFromDb;
   }
 
-  Future<void> _getPrevScrollIndex() async {
+  void _setProfileFocus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var index = prefs.getInt('profilesScrollIndex');
     if (index != null) {
       print('userindex ------------> $index');
-      Future.delayed(Duration(milliseconds: 100), () {
-        _controller.jumpToPage(index);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_controller.hasClients) {
+          print('$index -------------->Success');
+          _controller.jumpToPage(index);
+        }
       });
+      // _index = index;
     }
   }
 
   @override
   void initState() {
     // SqlHelper.deleteDb('sensogrip');
-    print('Profiles screen init');
+    print('<profiles screen init>');
     _getUsersFromDatabase();
-    _getPrevScrollIndex();
-    // User selectedUser =
-    //     Provider.of<UsersProvider>(context, listen: false).selectedUser;
-    // Future.delayed(Duration.zero, () {
-    //   if (selectedUser != null) {
-    //     var userIndex =
-    //         _users.indexWhere((user) => user.name == selectedUser.name);
-    //     print(selectedUser);
-    //     print('userindex ------------> $userIndex');
-    //     _controller.jumpToPage(userIndex);
-    //   }
-    // });
+    _setProfileFocus();
     super.initState();
   }
 
@@ -176,7 +155,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     SystemChrome.setEnabledSystemUIOverlays([]);
-
+    // _getProfileFocus(_index);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -205,31 +184,37 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                 ],
               ),
             )
-          : Center(
-              child: SizedBox(
-                height: size.height - 230, // card height
-                child: PageView.builder(
-                  itemCount: _users.length,
-                  controller: _controller,
-                  // restorationId: 'scroll_position',
-                  onPageChanged: (int index) async {
-                    setState(() => _index = index);
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    prefs.setInt('profilesScrollIndex', index);
-                    print('index saved-------------> $index');
-                  },
-                  itemBuilder: (ctx, i) {
-                    return Transform.scale(
-                      scale: i == _index ? 1 : 0.8,
-                      child: UserItem(
-                        _users[i],
-                        _deleteUser,
-                      ),
-                    );
-                  },
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: size.height - 200, // card height
+                  child: PageView.builder(
+                    itemCount: _users.length,
+                    controller: _controller,
+                    onPageChanged: (int index) async {
+                      setState(() => _index = index);
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.setInt('profilesScrollIndex', index);
+                      print('index saved-------------> $index');
+                    },
+                    itemBuilder: (ctx, i) {
+                      return Transform.scale(
+                        scale: i == _index ? 1 : 0.8,
+                        child: UserItem(
+                          _users[i],
+                          _deleteUser,
+                          i == _index,
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
+                SizedBox(
+                  height: 30,
+                )
+              ],
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(

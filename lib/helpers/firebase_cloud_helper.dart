@@ -2,10 +2,14 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:connectivity/connectivity.dart';
+import 'package:intl/intl.dart';
 
 import '../models/data.dart';
 import '../models/http_exception.dart';
 import '../credentials/credentials.dart';
+
+const String DATABASE_BASEPATH =
+    'https://sensogripauth-default-rtdb.europe-west1.firebasedatabase.app/data/';
 
 class FirebaseCloudHelper {
   static Future<String> login() async {
@@ -35,8 +39,7 @@ class FirebaseCloudHelper {
 
   static Future<void> transferDataToCloud(
       String user, Data data, String authToken) async {
-    final url =
-        'https://sensogripauth-default-rtdb.europe-west1.firebasedatabase.app/data/$user.json?auth=$authToken';
+    final url = '$DATABASE_BASEPATH/$user.json?auth=$authToken';
     try {
       final response = await http.post(Uri.parse(url),
           body: json.encode({
@@ -57,11 +60,14 @@ class FirebaseCloudHelper {
 
   static Future<bool> transferDataListToCloud(
       String user, List<Data> data) async {
+    DateTime timeStamp = DateTime.now();
+    String formattedDate = DateFormat('yyyy-dd-MM-kk-mm-ss').format(timeStamp);
+    user = user + '/$formattedDate';
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) return true;
     var authToken = await login();
-    final response = await deleteCloudData(user, authToken);
-    if (response == true) return true;
+    // final response = await deleteCloudData(user, authToken);
+    // if (response == true) return true;
     data.forEach((element) {
       transferDataToCloud(user, element, authToken);
     });
@@ -69,8 +75,7 @@ class FirebaseCloudHelper {
   }
 
   static Future<bool> deleteCloudData(String user, String authToken) async {
-    final url =
-        'https://sensogripauth-default-rtdb.europe-west1.firebasedatabase.app/data/$user.json?auth=$authToken';
+    final url = '$DATABASE_BASEPATH$user.json?auth=$authToken';
     try {
       final response = await http.delete(Uri.parse(url));
       if (response.statusCode >= 400) {

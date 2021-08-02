@@ -127,30 +127,33 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
     super.initState();
   }
 
+  Widget _buildDataStat(String title, String data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          child: Text(
+            title,
+            style: TextStyle(color: Colors.grey),
+            overflow: TextOverflow.fade,
+          ),
+        ),
+        Text(
+          data,
+          style: TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 22,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final users = Provider.of<UsersProvider>(context, listen: false).users;
-    Widget _buildDataStat(String title, String data) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: TextStyle(color: Colors.grey),
-          ),
-          Text(
-            data,
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 22,
-              color: Theme.of(context).accentColor,
-            ),
-          ),
-        ],
-      );
-    }
-
     return _data == null
         ? Center(
             child: Text(

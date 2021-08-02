@@ -10,8 +10,9 @@ import '../screens/data_and_stats_screen.dart';
 import '../screens/help_screen.dart';
 
 class AppDrawer extends StatelessWidget {
+  final isLocked;
   final Function onWillPop;
-  AppDrawer(this.onWillPop);
+  AppDrawer(this.isLocked, this.onWillPop);
 
   @override
   Widget build(BuildContext context) {
@@ -54,22 +55,24 @@ class AppDrawer extends StatelessWidget {
               Navigator.of(context).pushNamed(ProfilesScreen.routeName);
             },
           ),
-          buildListTile(
-            AppLocalizations.of(context).dataAndStats,
-            Icons.timeline,
-            () {
-              Navigator.of(context).pop(true);
-              Navigator.of(context).pushNamed(DataAndStatsScreen.routeName);
-            },
-          ),
-          buildListTile(
-            AppLocalizations.of(context).settings,
-            Icons.settings,
-            () {
-              Navigator.of(context).pop(true);
-              Navigator.of(context).pushNamed(SettingsScreen.routeName);
-            },
-          ),
+          if (isLocked == false)
+            buildListTile(
+              AppLocalizations.of(context).dataAndStats,
+              Icons.timeline,
+              () {
+                Navigator.of(context).pop(true);
+                Navigator.of(context).pushNamed(DataAndStatsScreen.routeName);
+              },
+            ),
+          if (isLocked == false)
+            buildListTile(
+              AppLocalizations.of(context).settings,
+              Icons.settings,
+              () {
+                Navigator.of(context).pop(true);
+                Navigator.of(context).pushNamed(SettingsScreen.routeName);
+              },
+            ),
           buildListTile(
             AppLocalizations.of(context).pencilInfo,
             Icons.info_outline,
@@ -83,7 +86,7 @@ class AppDrawer extends StatelessWidget {
             Icons.help,
             () {
               Navigator.of(context).pop(true);
-              // Navigator.of(context).pushNamed(HelpScreen.routeName);
+              Navigator.of(context).pushNamed(HelpScreen.routeName);
             },
           ),
           Expanded(child: Container()),

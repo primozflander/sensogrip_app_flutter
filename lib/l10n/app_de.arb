@@ -2,6 +2,7 @@
     "findDevices": "Geräte finden",
     "connect": "Verbinden",
     "open": "Öffnen",
+    "disconnect": "Trennen",
     "bluetoothProblem": "Bitte überprüfen Sie die Bluetooth-Einstellungen",
     "profiles": "Profile",
     "enterName": "Name des Therapiekindes",
@@ -43,6 +44,8 @@
     "overpressureFeedback": "Feedback bei Drucküberschreitung",
     "negativeFeedback": "Negatives Feedback",
     "dynamicRange": "Dynamische Grenzwertanpassung?",
+    "angleCorrection": "Stiftwinkelkorrektur?",
+    "angleCorrectionD": "Wenn eingeschaltet, werden die Sensorwerte winkelkompensiert",
     "positiveFeedbackColor": "Farbe des positiven Feedbacks",
     "negativeFeedbackColor": "Farbe des negativen Feedbacks",
     "simpleAssistanceColor": "Hilfsfarbe",
@@ -52,6 +55,8 @@
     "resetSettingsToDefaultQ": "Alle Einstellungen gehen dabei verloren. Zurücksetzen?",
     "calibrateSensors": "Kalibrierung der Sensoren",
     "calibrateSensorsQ": "Stellen Sie sicher, dass Sie nicht auf einen der Sensoren drücken. Kalibrieren?",
+    "lockApp": "App sperren",
+    "lockAppQ": "Sind Sie sicher, dass Sie die App sperren wollen?",
     "positiveFeedbackD": "Bei aktivierter Einstellung leuchten die LEDs, wenn sich die Sensoren innerhalb des Grenzwertes befinden",
     "dynamicRangeD": "Bei aktivierter Einstellung werden die Sensorwertebereiche dynamisch an das Benutzerverhalten angepasst",
     "noDataToDisplay": "Keine Daten vorhanden!",
@@ -128,5 +133,8 @@
     "instantFeedbackD": "Erhalten Sie sofortiges Feedback über das Echtzeitdiagramm und die eingebaute Stift-LED.",
     "userProfilesD": "Jeder Benutzer hat sein eigenes Profil mit seinen persönlichen Einstellungen und Messungen.",
     "analyzeDataD": "Holen Sie sich detaillierte Statistiken zu Ihren Messungen aus der App oder exportieren Sie Ihre Daten einfach auf Ihren PC zur weiteren Analyse.",
-    "cloudServiceD": "Speichern Sie Ihre Daten sicher in der Cloud."
+    "cloudServiceD": "Speichern Sie Ihre Daten sicher in der Cloud.",
+    "lockedFeaturesD": "Einige Funktionen der App sind derzeit gesperrt. Geben Sie den richtigen Code ein, um den vollen Funktionsumfang freizuschalten.",
+    "enterPassword": "Kennwort eingeben",
+    "passwordF": "Kennwort ist nicht gültig."
 }

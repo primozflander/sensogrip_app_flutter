@@ -62,13 +62,27 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
     );
   }
 
-  Future<void> _getPrevScrollIndex() async {
+  // Future<void> _getPrevScrollIndex() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   var index = prefs.getDouble('dataScrollIndex');
+  //   if (index != null) {
+  //     print('dataindex ------------> $index');
+  //     Future.delayed(Duration(milliseconds: 100), () {
+  //       _controller.jumpTo(index);
+  //     });
+  //   }
+  // }
+
+  void _setDataFocus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var index = prefs.getDouble('dataScrollIndex');
     if (index != null) {
       print('dataindex ------------> $index');
-      Future.delayed(Duration(milliseconds: 100), () {
-        _controller.jumpTo(index);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_controller.hasClients) {
+          print('$index -------------->Success');
+          _controller.jumpTo(index);
+        }
       });
     }
   }
@@ -112,9 +126,10 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
   @override
   void initState() {
     //SqlHelper.deleteDb('sensogrip');
-    print('init data select screen');
+    print('<data selection screen init>');
     _getDataFromDatabase();
-    _getPrevScrollIndex();
+    _setDataFocus();
+    // _getPrevScrollIndex();
     _controller = ScrollController()
       ..addListener(() {
         _scrollOffset = _controller.offset;
@@ -124,14 +139,6 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
 
     super.initState();
   }
-
-  // @override
-  // String get restorationId => 'data_selection_screen';
-
-  // @override
-  // void restoreState(RestorationBucket oldBucket, bool initialRestore) {
-  //   registerForRestoration(_index, 'list_view_index');
-  // }
 
   TextStyle headerStyle = TextStyle(fontSize: 18, color: Colors.white);
 

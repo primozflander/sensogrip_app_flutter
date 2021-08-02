@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:sensogrip_app/models/text_styles.dart';
+
 class DisplaySensorStats extends StatefulWidget {
   final int value;
   final String text;
@@ -35,30 +37,8 @@ class _DisplaySensorStatsState extends State<DisplaySensorStats> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textLarge = TextStyle(
-      fontWeight: FontWeight.normal,
-      fontSize: 50,
-      color: Theme.of(context).accentColor,
-      // fontFamily: 'OpenSans',
-    );
-    TextStyle textSmall = TextStyle(
-      fontWeight: FontWeight.normal,
-      fontSize: 18,
-      color: Theme.of(context).accentColor,
-      // fontFamily: 'OpenSans',
-    );
-    TextStyle title = TextStyle(
-      fontWeight: FontWeight.normal,
-      fontSize: 18,
-      color: Colors.black,
-      // fontFamily: 'Quicksand',
-    );
     return Flexible(
       flex: 3,
-      // width: 335,
-      // height: 150,
-      // margin: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-      // padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -72,19 +52,19 @@ class _DisplaySensorStatsState extends State<DisplaySensorStats> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 5,
-                  ),
+                  // SizedBox(
+                  //   height: 5,
+                  // ),
                   Text(
                     widget.value.toString(),
-                    style: textLarge,
+                    style: TextStyles.sensorCardValueLarge,
                   ),
                   SizedBox(
                     height: 7,
                   ),
                   Text(
                     widget.text,
-                    style: title,
+                    style: TextStyles.sensorCardTitle,
                   ),
                 ],
               ),
@@ -92,8 +72,6 @@ class _DisplaySensorStatsState extends State<DisplaySensorStats> {
             Container(
               width: 120,
               height: 150,
-              // margin: EdgeInsets.only(right: 5),
-              //color: Colors.grey.withOpacity(0.1),
               decoration: BoxDecoration(
                 color: Colors.grey.withOpacity(0.1),
                 borderRadius: BorderRadius.only(
@@ -110,11 +88,11 @@ class _DisplaySensorStatsState extends State<DisplaySensorStats> {
                       children: [
                         Text(
                           _getMax(widget.value).toString(),
-                          style: textSmall,
+                          style: TextStyles.sensorCardValueSmall,
                         ),
                         Text(
                           AppLocalizations.of(context).max,
-                          style: title,
+                          style: TextStyles.sensorCardTitle,
                         ),
                       ],
                     ),
@@ -128,12 +106,10 @@ class _DisplaySensorStatsState extends State<DisplaySensorStats> {
                       children: [
                         Text(
                           _getAverage(widget.value).toString(),
-                          style: textSmall,
+                          style: TextStyles.sensorCardValueSmall,
                         ),
-                        Text(
-                          AppLocalizations.of(context).avg,
-                          style: title,
-                        ),
+                        Text(AppLocalizations.of(context).avg,
+                            style: TextStyles.sensorCardTitle),
                       ],
                     ),
                   ),

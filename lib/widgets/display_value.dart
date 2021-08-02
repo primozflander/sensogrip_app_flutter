@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:sensogrip_app/models/text_styles.dart';
+
 class DisplayValue extends StatelessWidget {
   final int value;
   final String text;
@@ -11,9 +13,6 @@ class DisplayValue extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       flex: 2,
-      // width: 200,
-      // height: 150,
-      //padding: EdgeInsets.all(5),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -23,29 +22,21 @@ class DisplayValue extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 10,
-            ),
+            // SizedBox(
+            //   height: 10,
+            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   value.toString(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 50,
-                    color: Theme.of(context).accentColor,
-                    //fontFamily: 'Quicksand',
-                  ),
+                  style: TextStyles.sensorCardValueLarge,
                 ),
                 (unit != '')
                     ? Text(
                         '  $unit',
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 18,
-                            color: Colors.black),
+                        style: TextStyles.sensorCardTitle,
                       )
                     : Container(
                         width: 0,
@@ -58,10 +49,7 @@ class DisplayValue extends StatelessWidget {
             ),
             Text(
               text,
-              style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 18,
-                  color: Colors.black),
+              style: TextStyles.sensorCardTitle,
             ),
           ],
         ),

@@ -15,7 +15,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   void _onIntroEnd(context) async {
-    Navigator.of(context).pushReplacementNamed(StartScreen.routeName);
+    Navigator.of(context).pushReplacementNamed(BLECheckScreen.routeName);
   }
 
   @override

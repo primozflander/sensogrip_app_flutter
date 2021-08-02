@@ -202,108 +202,108 @@ class Functions {
                       color: Colors.black,
                     ),
                   ),
-                  content: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Container(
-                      width: 400,
-                      height: 90,
-                      // width: 500,
-                      child: dropdownValue !=
-                              AppLocalizations.of(context).newTestProtocol
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(AppLocalizations.of(context)
-                                    .saveMeasurementQ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(AppLocalizations.of(context)
-                                            .testProtocol +
-                                        ':'),
-                                    SizedBox(
-                                      width: 10,
+                  content: Container(
+                    width: 400,
+                    height: 100,
+                    // width: 500,
+                    child: dropdownValue !=
+                            AppLocalizations.of(context).newTestProtocol
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(AppLocalizations.of(context)
+                                  .saveMeasurementQ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(AppLocalizations.of(context)
+                                          .testProtocol +
+                                      ':'),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  DropdownButton<String>(
+                                    value: dropdownValue,
+                                    // icon: const Icon(Icons.arrow_downward),
+                                    iconSize: 24,
+                                    elevation: 16,
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor),
+                                    underline: Container(
+                                      height: 2,
+                                      color: Theme.of(context).primaryColor,
                                     ),
-                                    DropdownButton<String>(
-                                      value: dropdownValue,
-                                      // icon: const Icon(Icons.arrow_downward),
-                                      iconSize: 24,
-                                      elevation: 16,
-                                      style: TextStyle(
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                      underline: Container(
-                                        height: 2,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                      onChanged: (String newValue) {
-                                        setState(() {
-                                          dropdownValue = newValue;
-                                          if (dropdownValue ==
-                                              AppLocalizations.of(context)
-                                                  .newTestProtocol) {
-                                            _isCustom = true;
-                                          }
-                                        });
-                                      },
-                                      items: <String>[
-                                        AppLocalizations.of(context)
-                                            .newTestProtocol,
-                                        'A1',
-                                        'A2',
-                                        'A3',
-                                        'A4',
-                                        'A5',
-                                        'B1a1',
-                                        'B1a2',
-                                        'B2b1',
-                                        'B2b2',
-                                        'B3a1',
-                                        'B3a2',
-                                        'B4b1',
-                                        'B4b2',
-                                        'B5a1',
-                                        'B5a2',
-                                        'C',
-                                      ].map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          : Form(
-                              key: _form,
-                              child: TextFormField(
-                                  initialValue: '',
-                                  decoration: InputDecoration(
-                                      labelText: AppLocalizations.of(context)
-                                          .testProtocol),
-                                  textInputAction: TextInputAction.done,
-                                  onSaved: (value) {
-                                    dropdownValue = value;
-                                  },
-                                  validator: (value) {
-                                    if (value.isEmpty || value.trim() == "") {
-                                      return AppLocalizations.of(context)
-                                          .provideValidNameF;
-                                    }
-                                    if (value.trim().length > 20) {
-                                      return AppLocalizations.of(context)
-                                          .nameTooLongF;
-                                    }
-                                    return null;
-                                  }),
-                            ),
-                    ),
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        dropdownValue = newValue;
+                                        if (dropdownValue ==
+                                            AppLocalizations.of(context)
+                                                .newTestProtocol) {
+                                          _isCustom = true;
+                                        }
+                                      });
+                                    },
+                                    items: <String>[
+                                      AppLocalizations.of(context)
+                                          .newTestProtocol,
+                                      'A1',
+                                      'A2',
+                                      'A3',
+                                      'A4',
+                                      'A5',
+                                      'B1a1',
+                                      'B1a2',
+                                      'B2b1',
+                                      'B2b2',
+                                      'B3a1',
+                                      'B3a2',
+                                      'B4b1',
+                                      'B4b2',
+                                      'B5a1',
+                                      'B5a2',
+                                      'B6',
+                                      'B7',
+                                      'B8',
+                                      'C',
+                                      'SEMS',
+                                    ].map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        : Form(
+                            key: _form,
+                            child: TextFormField(
+                                initialValue: '',
+                                decoration: InputDecoration(
+                                    labelText: AppLocalizations.of(context)
+                                        .testProtocol),
+                                textInputAction: TextInputAction.done,
+                                onSaved: (value) {
+                                  dropdownValue = value;
+                                },
+                                validator: (value) {
+                                  if (value.isEmpty || value.trim() == "") {
+                                    return AppLocalizations.of(context)
+                                        .provideValidNameF;
+                                  }
+                                  if (value.trim().length > 20) {
+                                    return AppLocalizations.of(context)
+                                        .nameTooLongF;
+                                  }
+                                  return null;
+                                }),
+                          ),
                   ),
                   actions: <Widget>[
                     Row(

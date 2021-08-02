@@ -35,6 +35,7 @@ class _HelpScreenState extends State<HelpScreen> {
 
   @override
   void initState() {
+    print('<help screen init>');
     fromAsset('assets/pdf/manual.pdf', 'manual.pdf').then((f) {
       setState(() {
         pdfPath = f.path;
@@ -58,6 +59,8 @@ class _HelpScreenState extends State<HelpScreen> {
         child: isReady
             ? PDFView(
                 filePath: pdfPath,
+                // enableSwipe: true,
+                // pageFling: true,
               )
             : Center(
                 child: Text(

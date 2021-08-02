@@ -221,7 +221,7 @@ class DisplayChartState extends State<DisplayChart> {
         return Colors.grey;
         break;
       case 1:
-        return Theme.of(context).accentColor;
+        return Theme.of(context).colorScheme.secondary;
         break;
       case 2:
         return Theme.of(context).primaryColor;
@@ -322,7 +322,7 @@ class DisplayChartState extends State<DisplayChart> {
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
                     primary: _drawAngle
-                        ? Theme.of(context).accentColor
+                        ? Theme.of(context).colorScheme.secondary
                         : Colors.grey,
                   ),
                   child: Text(
@@ -348,7 +348,7 @@ class DisplayChartState extends State<DisplayChart> {
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
                     primary: _drawSpeed
-                        ? Theme.of(context).accentColor
+                        ? Theme.of(context).colorScheme.secondary
                         : Colors.grey,
                   ),
                   child: Text(

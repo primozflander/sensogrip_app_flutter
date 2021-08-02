@@ -1,6 +1,7 @@
 {
     "findDevices": "Find Devices",
     "open": "Open",
+    "disconnect": "Disconnect",
     "bluetoothProblem": "Please check bluetooth settings",
     "connect": "Connect",
     "profiles": "Profiles",
@@ -43,6 +44,8 @@
     "overpressureFeedback": "Overpressure feedback",
     "negativeFeedback": "Negative feedback",
     "dynamicRange": "Adapt ranges dynamically?",
+    "angleCorrection": "Pencil angle correction?",
+    "angleCorrectionD": "When turned on, sensor values will be angle compensated",
     "positiveFeedbackColor": "Positive feedback color",
     "negativeFeedbackColor": "Negative feedback color",
     "simpleAssistanceColor": "Assistance color",
@@ -52,6 +55,8 @@
     "resetSettingsToDefaultQ": "All settings will be lost. Reset?",
     "calibrateSensors": "Calibrate sensors",
     "calibrateSensorsQ": "Make sure that you are not pressing on any of the sensors. Calibrate?",
+    "lockApp": "Lock the App",
+    "lockAppQ": "Are you sure you want to lock the App?",
     "positiveFeedbackD": "When turned on, LED will light up when sensors are in range",
     "dynamicRangeD": "When turned on, sensor ranges will be dynamically adjusted according to the user's performance",
     "noDataToDisplay": "No data to display!",
@@ -128,5 +133,8 @@
     "instantFeedbackD": "Get instant feedback via real-time chart and built-in pencil LED.",
     "userProfilesD": "Each user has their own profile, with their own personalized settings and measurements.",
     "analyzeDataD": "Get detailed statistics of your measurements from the App or simply export your data to your PC for further analysis.",
-    "cloudServiceD": "Save your data securely to the cloud."
+    "cloudServiceD": "Save your data securely to the cloud.",
+    "lockedFeaturesD": "Some features of the App are currently locked. Enter the correct code to unlock the full experience.",
+    "enterPassword": "Enter password",
+    "passwordF": "Password is not valid."
 }
