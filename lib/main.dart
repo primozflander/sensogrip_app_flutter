@@ -61,10 +61,10 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         initialRoute: showOnboarding != null
-            ? StartScreen.routeName
+            ? BLECheckScreen.routeName
             : OnboardingScreen.routeName,
         routes: {
-          StartScreen.routeName: (context) => StartScreen(),
+          BLECheckScreen.routeName: (context) => BLECheckScreen(),
           ProfilesScreen.routeName: (context) => ProfilesScreen(),
           InfoScreen.routeName: (context) => InfoScreen(),
           ChartScreen.routeName: (context) => ChartScreen(),
@@ -77,7 +77,7 @@ class MyApp extends StatelessWidget {
         },
         onUnknownRoute: (settings) {
           return MaterialPageRoute(
-            builder: (ctx) => StartScreen(),
+            builder: (ctx) => BLECheckScreen(),
           );
         },
       ),

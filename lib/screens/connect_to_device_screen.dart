@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:sensogrip_app/widgets/ble_helpers.dart';
 
 import '../providers/ble_provider.dart';
 import './profiles_screen.dart';
-import './start_screen.dart';
 import '../models/uuids.dart';
 import '../models/text_styles.dart';
 
@@ -19,44 +19,18 @@ class ConnectToDeviceScreen extends StatefulWidget {
 
 class _ConnectToDeviceScreenState extends State<ConnectToDeviceScreen> {
   bool _isReady = false;
+  bool _isLoading = false;
   Stream<List<int>> stream;
   StreamController<List<int>> _streamController =
       StreamController<List<int>>.broadcast();
+  StreamSubscription<BluetoothDeviceState> bleConnectionStateSubscription;
 
   Future _connectToDevice(BluetoothDevice device) async {
-    if (device == null) {
-      _pop();
-      return;
-    }
-    Timer(
-      const Duration(seconds: 5),
-      () {
-        if (!_isReady) {
-          device.disconnect();
-          _pop();
-        }
-      },
-    );
-
-    await device
-        .connect(autoConnect: false)
-        .then((_) => _discoverServices(device));
+    await device.connect(autoConnect: false, timeout: Duration(seconds: 5));
+    _addConnectionListener(device);
   }
 
-  // void _disconnectFromDevice(device) {
-  //   if (device == null) {
-  //     _pop();
-  //     return;
-  //   }
-  //   device.disconnect();
-  // }
-
   Future _discoverServices(BluetoothDevice device) async {
-    if (device == null) {
-      _pop();
-      return;
-    }
-
     final bleCharProvider = Provider.of<BleProvider>(context, listen: false);
     List<BluetoothService> services = await device.discoverServices();
     for (BluetoothService service in services) {
@@ -94,46 +68,75 @@ class _ConnectToDeviceScreenState extends State<ConnectToDeviceScreen> {
       }
     }
     if (_isReady) {
-      Navigator.of(context).pushReplacementNamed(ProfilesScreen.routeName);
+      Navigator.of(context).pushNamed(ProfilesScreen.routeName);
     } else
-      _pop();
+      device.disconnect();
   }
 
-  _pop() {
-    Navigator.of(context).pushReplacementNamed(StartScreen.routeName);
+  void _addConnectionListener(device) {
+    bleConnectionStateSubscription = device.state.listen(
+      (connectionState) async {
+        print('Event: BLE conection state state: $connectionState');
+        if (connectionState == BluetoothDeviceState.disconnected) {
+          await bleConnectionStateSubscription.cancel();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute<void>(
+                  builder: (BuildContext context) => ConnectToDeviceScreen()),
+              ModalRoute.withName(ConnectToDeviceScreen.routeName));
+          setState(() {
+            _isLoading = false;
+          });
+        }
+        if (connectionState == BluetoothDeviceState.connected) {
+          await _discoverServices(device);
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      },
+    );
+  }
+
+  void _selectDevice(BluetoothDevice device) {
+    setState(() {
+      _isLoading = true;
+    });
+    _connectToDevice(device);
   }
 
   @override
   void initState() {
     print('<connect to device screen init>');
-    final device = Provider.of<BleProvider>(context, listen: false).bleDevice;
-    _connectToDevice(device);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          AppLocalizations.of(context).connect,
-          style: TextStyles.appBarTextStyle,
+    if (_isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            AppLocalizations.of(context).connect,
+            style: TextStyles.appBarTextStyle,
+          ),
         ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 30),
-            Text(
-              AppLocalizations.of(context).loading,
-              style: TextStyles.textGrey,
-            ),
-          ],
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 30),
+              Text(
+                AppLocalizations.of(context).loading,
+                style: TextStyles.textGrey,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return FindDevicesScreen(_selectDevice);
+    }
   }
 }

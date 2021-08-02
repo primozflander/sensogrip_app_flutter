@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:sensogrip_app/screens/profiles_screen.dart';
 
 import '../providers/ble_provider.dart';
-import '../screens/connect_to_device_screen.dart';
 
 class BluetoothOffScreen extends StatelessWidget {
   const BluetoothOffScreen({Key key, this.state}) : super(key: key);
@@ -42,6 +40,10 @@ class BluetoothOffScreen extends StatelessWidget {
 }
 
 class FindDevicesScreen extends StatelessWidget {
+  final Function selectDevice;
+
+  FindDevicesScreen(this.selectDevice);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,24 +71,26 @@ class FindDevicesScreen extends StatelessWidget {
                             stream: d.state,
                             initialData: BluetoothDeviceState.disconnected,
                             builder: (c, snapshot) {
-                              // print('----------------->$d.state');
-
-                              print('----------------->$snapshot.data');
                               if (snapshot.data ==
                                   BluetoothDeviceState.connected) {
                                 return ElevatedButton(
-                                  child:
-                                      Text(AppLocalizations.of(context).open),
+                                  child: Text(
+                                      AppLocalizations.of(context).disconnect),
                                   onPressed: () async {
                                     Provider.of<BleProvider>(context,
                                             listen: false)
                                         .setBleDevice(d);
-                                    await d.disconnect().then(
-                                          (value) => Navigator.of(context)
-                                              .pushReplacementNamed(
-                                                  ConnectToDeviceScreen
-                                                      .routeName),
-                                        );
+                                    // await d.disconnect().then(
+                                    //       (value) => Navigator.of(context)
+                                    //           .pushReplacementNamed(
+                                    //               ConnectToDeviceScreen
+                                    //                   .routeName),
+                                    //     );
+                                    // await d.disconnect().then(
+                                    //       (value) => selectDevice(d),
+                                    //     );
+                                    // selectDevice(d);
+                                    d.disconnect();
                                   },
                                 );
                               }
@@ -111,8 +115,7 @@ class FindDevicesScreen extends StatelessWidget {
                           onTap: () {
                             Provider.of<BleProvider>(context, listen: false)
                                 .setBleDevice(r.device);
-                            Navigator.of(context).pushReplacementNamed(
-                                ConnectToDeviceScreen.routeName);
+                            selectDevice(r.device);
                           },
                         ),
                       )
@@ -237,8 +240,6 @@ class ScanResultTile extends StatelessWidget {
           onPrimary: Colors.white,
         ),
         child: Text(AppLocalizations.of(context).connect),
-        // color: Theme.of(context).colorScheme.secondary,
-        // textColor: Colors.white,
         onPressed: (result.advertisementData.connectable) ? onTap : null,
       ),
       children: <Widget>[

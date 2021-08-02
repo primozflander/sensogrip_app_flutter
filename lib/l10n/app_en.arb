@@ -1,6 +1,7 @@
 {
     "findDevices": "Find Devices",
     "open": "Open",
+    "disconnect": "Disconnect",
     "bluetoothProblem": "Please check bluetooth settings",
     "connect": "Connect",
     "profiles": "Profiles",

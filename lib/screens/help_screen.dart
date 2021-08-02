@@ -59,6 +59,8 @@ class _HelpScreenState extends State<HelpScreen> {
         child: isReady
             ? PDFView(
                 filePath: pdfPath,
+                // enableSwipe: true,
+                // pageFling: true,
               )
             : Center(
                 child: Text(

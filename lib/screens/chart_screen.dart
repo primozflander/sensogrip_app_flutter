@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_blue/gen/flutterblue.pbjson.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -11,16 +10,13 @@ import 'package:camera/camera.dart';
 import 'package:screen_recorder_flutter/screen_recorder_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
-import 'package:sensogrip_app/screens/connect_to_device_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_blue/flutter_blue.dart';
 
 import '../widgets/realtime_chart.dart';
 import '../widgets/display_data_and_stats.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/display_locked.dart';
 import '../models/data.dart';
-import './start_screen.dart';
 import '../models/text_styles.dart';
 import '../helpers/functions.dart';
 import '../helpers/sql_helper.dart';
@@ -46,7 +42,6 @@ class _ChartScreenState extends State<ChartScreen> {
   bool _isCameraReady = false;
   CameraController _controller;
   List<String> _currentMeasurements = [];
-  StreamSubscription<BluetoothDeviceState> bleConnectionStateSubscription;
 
   void _checkIfLocked() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -139,6 +134,7 @@ class _ChartScreenState extends State<ChartScreen> {
     );
     await getExternalStorageDirectory().then(
       (directory) {
+        print(directory);
         File file = File(
             '${directory.path}/${description}_${pencilName}_${userName}_$formattedDate.txt');
         file.writeAsString(data.join('\n'), mode: FileMode.write);
@@ -168,9 +164,9 @@ class _ChartScreenState extends State<ChartScreen> {
                     final device =
                         Provider.of<BleProvider>(context, listen: false)
                             .bleDevice;
-                    Navigator.of(context).pop(true);
-                    Navigator.of(context)
-                        .pushReplacementNamed(StartScreen.routeName);
+                    // Navigator.of(context).pop(true);
+                    // Navigator.of(context)
+                    //     .pushReplacementNamed(ConnectToDeviceScreen.routeName);
                     device.disconnect();
                   },
                   child: Text(AppLocalizations.of(context).yes)),
@@ -213,25 +209,25 @@ class _ChartScreenState extends State<ChartScreen> {
     });
   }
 
-  void _addBleConnectionListener() {
-    var bleDevice = Provider.of<BleProvider>(context).bleDevice;
-    bleConnectionStateSubscription = bleDevice.state.listen(
-      (connectionState) async {
-        print('Event: BLE conection state state: $connectionState');
-        if (connectionState == BluetoothDeviceState.disconnected) {
-          bleConnectionStateSubscription.cancel().then(
-            (_) {
-              bleDevice.disconnect();
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute<void>(
-                      builder: (BuildContext context) => StartScreen()),
-                  ModalRoute.withName(StartScreen.routeName));
-            },
-          );
-        }
-      },
-    );
-  }
+  // void _addBleConnectionListener() {
+  //   var bleDevice = Provider.of<BleProvider>(context).bleDevice;
+  //   bleConnectionStateSubscription = bleDevice.state.listen(
+  //     (connectionState) async {
+  //       print('Event: BLE conection state state: $connectionState');
+  //       if (connectionState == BluetoothDeviceState.disconnected) {
+  //         bleConnectionStateSubscription.cancel().then(
+  //           (_) {
+  //             bleDevice.disconnect();
+  //             Navigator.of(context).pushAndRemoveUntil(
+  //                 MaterialPageRoute<void>(
+  //                     builder: (BuildContext context) => BLECheckScreen()),
+  //                 ModalRoute.withName(BLECheckScreen.routeName));
+  //           },
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
 
   @override
   void dispose() {
@@ -245,12 +241,6 @@ class _ChartScreenState extends State<ChartScreen> {
     _initScreenRecorder();
     _checkIfLocked();
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    _addBleConnectionListener();
-    super.didChangeDependencies();
   }
 
   @override

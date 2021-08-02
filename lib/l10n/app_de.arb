@@ -2,6 +2,7 @@
     "findDevices": "Geräte finden",
     "connect": "Verbinden",
     "open": "Öffnen",
+    "disconnect": "Trennen",
     "bluetoothProblem": "Bitte überprüfen Sie die Bluetooth-Einstellungen",
     "profiles": "Profile",
     "enterName": "Name des Therapiekindes",
