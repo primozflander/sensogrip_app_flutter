@@ -10,6 +10,7 @@ Android companion App for Sensogrip pencil.
   * [Getting Started](#getting-started)
     + [Prerequisites](#prerequisites)
     + [App installation](#app-installation)
+    + [Software versions at the time of build](#software-versions-at-the-time-of-build)
   * [License](#license)
   * [Contact](#contact)
   * [Acknowledgements](#acknowledgements)
@@ -33,6 +34,8 @@ It features:
 * [Flutter](https://flutter.dev)
 * [Visual Studio Code](https://code.visualstudio.com)
 
+
+
 ## Getting Started
 
 Follow this steps to upload the App to your Android tablet.
@@ -50,6 +53,13 @@ Follow this steps to upload the App to your Android tablet.
 2. Open command line and move to the project folder `cd <your app dir>`
 3. Run `flutter build apk --release`
 4. Run `flutter install`
+
+
+### Software versions at the time of build
+
+* Flutter (2.4.0-0.0.pre)
+* Dart (2.14.0)
+* Visual Studio Code (1.59.0)
 
 ## License
 

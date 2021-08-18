@@ -190,6 +190,7 @@ class Functions {
     final _form = GlobalKey<FormState>();
     var _isCustom = false;
     return showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext ctx) {
           return StatefulBuilder(
