@@ -192,36 +192,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
     String title,
     FeedbackType value,
   ) {
-    return Container(
-      margin: EdgeInsets.all(5),
-      width: 180,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Colors.grey.shade100,
-      ),
-      child: Column(
-        children: [
-          Radio(
-            value: value,
-            activeColor: Colors.blueAccent,
-            groupValue: _selectedFeedback,
-            onChanged: (FeedbackType value) {
-              _isPositiveFeedback = 1;
-              _feedbackType = Functions.feedbackTypeToInt(value);
-              print(Functions.feedbackTypeToInt(value));
-              _writeConfigurationState();
-              setState(
-                () {
-                  _selectedFeedback = value;
-                },
-              );
-            },
-          ),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-          ),
-        ],
+    return Expanded(
+      flex: 1,
+      child: Container(
+        margin: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Colors.grey.shade100,
+        ),
+        child: Column(
+          children: [
+            Radio(
+              value: value,
+              activeColor: Colors.blueAccent,
+              groupValue: _selectedFeedback,
+              onChanged: (FeedbackType value) {
+                _isPositiveFeedback = 1;
+                _feedbackType = Functions.feedbackTypeToInt(value);
+                print(Functions.feedbackTypeToInt(value));
+                _writeConfigurationState();
+                setState(
+                  () {
+                    _selectedFeedback = value;
+                  },
+                );
+              },
+            ),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -383,6 +385,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildSliderSideLabel(text) {
+    return Expanded(
+      flex: 1,
+      child: Container(
+        alignment: Alignment.center,
+        child: Text(
+          text.floor().toString(),
+          style: TextStyle(color: Colors.grey),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isAdmin =
@@ -396,364 +411,331 @@ class _SettingsScreenState extends State<SettingsScreen> {
           style: TextStyles.appBarTextStyle,
         ),
       ),
-      body: !isReady
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : SingleChildScrollView(
-              child: Container(
-                child: Column(
-                  children: [
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      margin: EdgeInsets.only(
-                          top: 10, left: 10, right: 10, bottom: 5),
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              AppLocalizations.of(context).tipSensorRange,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      _tipSensorRangeValues.start
-                                          .floor()
-                                          .toString(),
-                                      style: TextStyle(color: Colors.grey),
+      body:
+          !isReady //---------------------------------------------------------------------------------------------------------
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SingleChildScrollView(
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          margin: EdgeInsets.only(
+                              top: 10, left: 10, right: 10, bottom: 5),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 45),
+                            child: SliderTheme(
+                              data: SliderThemeData(
+                                  activeTickMarkColor: Colors.transparent,
+                                  inactiveTickMarkColor: Colors.transparent),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context).tipSensorRange,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  Row(
+                                    children: [
+                                      _buildSliderSideLabel(
+                                          _tipSensorRangeValues.start),
+                                      Expanded(
+                                        flex: 10,
+                                        child: RangeSlider(
+                                          values: _tipSensorRangeValues,
+                                          min: 5,
+                                          max: 500,
+                                          divisions: 99,
+                                          labels: RangeLabels(
+                                            _tipSensorRangeValues.start
+                                                .floor()
+                                                .toString(),
+                                            _tipSensorRangeValues.end
+                                                .floor()
+                                                .toString(),
+                                          ),
+                                          onChanged: (RangeValues values) {
+                                            setState(
+                                              () {
+                                                _tipSensorRangeValues = values;
+                                              },
+                                            );
+                                          },
+                                          onChangeEnd: (RangeValues endValues) {
+                                            _tipSensorUpperRange =
+                                                endValues.end.toInt();
+                                            _tipSensorLowerRange =
+                                                endValues.start.toInt();
+                                            _writeConfigurationState();
+                                          },
+                                        ),
+                                      ),
+                                      _buildSliderSideLabel(
+                                          _tipSensorRangeValues.end),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)
+                                        .fingerSensorRange,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  Row(
+                                    children: [
+                                      _buildSliderSideLabel(
+                                          _fingerSensorRangeValues.start),
+                                      Expanded(
+                                        flex: 10,
+                                        child: RangeSlider(
+                                          values: _fingerSensorRangeValues,
+                                          min: 5,
+                                          max: 500,
+                                          divisions: 99,
+                                          labels: RangeLabels(
+                                            _fingerSensorRangeValues.start
+                                                .floor()
+                                                .toString(),
+                                            _fingerSensorRangeValues.end
+                                                .floor()
+                                                .toString(),
+                                          ),
+                                          onChanged: (RangeValues values) {
+                                            setState(() {
+                                              _fingerSensorRangeValues = values;
+                                            });
+                                          },
+                                          onChangeEnd: (RangeValues endValues) {
+                                            _fingerSensorUpperRange =
+                                                endValues.end.toInt();
+                                            _fingerSensorLowerRange =
+                                                endValues.start.toInt();
+                                            _writeConfigurationState();
+                                          },
+                                        ),
+                                      ),
+                                      _buildSliderSideLabel(
+                                          _fingerSensorRangeValues.end)
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context).feedbackType,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  Container(
+                                    margin:
+                                        EdgeInsets.symmetric(vertical: 10.0),
+                                    height: 120.0,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        _buildRadioButton(
+                                          AppLocalizations.of(context)
+                                              .noFeedback,
+                                          FeedbackType.noFeedback,
+                                        ),
+                                        _buildRadioButton(
+                                          AppLocalizations.of(context)
+                                              .simpleFeedback,
+                                          FeedbackType.simpleFeedback,
+                                        ),
+                                        _buildRadioButton(
+                                          AppLocalizations.of(context)
+                                              .bothSensorsInRange,
+                                          FeedbackType.bothSensorsInRange,
+                                        ),
+                                        _buildRadioButton(
+                                          AppLocalizations.of(context)
+                                              .advancedFeedback,
+                                          FeedbackType.advancedFeedback,
+                                        ),
+                                        _buildRadioButton(
+                                          AppLocalizations.of(context)
+                                              .overpressureFeedback,
+                                          FeedbackType.overpressureFeedback,
+                                        ),
+                                        _buildRadioButton(
+                                          AppLocalizations.of(context)
+                                              .negativeFeedback,
+                                          FeedbackType.negativeFeedback,
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 10,
-                                  child: RangeSlider(
-                                    values: _tipSensorRangeValues,
-                                    min: 5,
-                                    max: 500,
-                                    divisions: 500,
-                                    labels: RangeLabels(
-                                      _tipSensorRangeValues.start
-                                          .floor()
-                                          .toString(),
-                                      _tipSensorRangeValues.end
-                                          .floor()
-                                          .toString(),
-                                    ),
-                                    onChanged: (RangeValues values) {
-                                      setState(
-                                        () {
-                                          _tipSensorRangeValues = values;
-                                        },
-                                      );
-                                    },
-                                    onChangeEnd: (RangeValues endValues) {
-                                      _tipSensorUpperRange =
-                                          endValues.end.toInt();
-                                      _tipSensorLowerRange =
-                                          endValues.start.toInt();
-                                      Future.delayed(
-                                        const Duration(milliseconds: 500),
-                                        () {
-                                          _writeConfigurationState();
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      _tipSensorRangeValues.end
-                                          .floor()
-                                          .toString(),
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              AppLocalizations.of(context).fingerSensorRange,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      _fingerSensorRangeValues.start
-                                          .floor()
-                                          .toString(),
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 10,
-                                  child: RangeSlider(
-                                    values: _fingerSensorRangeValues,
-                                    min: 5,
-                                    max: 500,
-                                    divisions: 500,
-                                    labels: RangeLabels(
-                                      _fingerSensorRangeValues.start
-                                          .floor()
-                                          .toString(),
-                                      _fingerSensorRangeValues.end
-                                          .floor()
-                                          .toString(),
-                                    ),
-                                    onChanged: (RangeValues values) {
-                                      setState(() {
-                                        _fingerSensorRangeValues = values;
-                                      });
-                                    },
-                                    onChangeEnd: (RangeValues endValues) {
-                                      _fingerSensorUpperRange =
-                                          endValues.end.toInt();
-                                      _fingerSensorLowerRange =
-                                          endValues.start.toInt();
-                                      Future.delayed(
-                                        const Duration(milliseconds: 500),
-                                        () {
-                                          _writeConfigurationState();
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      _fingerSensorRangeValues.end
-                                          .floor()
-                                          .toString(),
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              AppLocalizations.of(context).feedbackType,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(vertical: 10.0),
-                              height: 120.0,
-                              child: Center(
-                                child: ListView(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  children: <Widget>[
-                                    _buildRadioButton(
-                                      AppLocalizations.of(context).noFeedback,
-                                      FeedbackType.noFeedback,
-                                    ),
-                                    _buildRadioButton(
-                                      AppLocalizations.of(context)
-                                          .simpleFeedback,
-                                      FeedbackType.simpleFeedback,
-                                    ),
-                                    _buildRadioButton(
-                                      AppLocalizations.of(context)
-                                          .bothSensorsInRange,
-                                      FeedbackType.bothSensorsInRange,
-                                    ),
-                                    _buildRadioButton(
-                                      AppLocalizations.of(context)
-                                          .advancedFeedback,
-                                      FeedbackType.advancedFeedback,
-                                    ),
-                                    _buildRadioButton(
-                                      AppLocalizations.of(context)
-                                          .overpressureFeedback,
-                                      FeedbackType.overpressureFeedback,
-                                    ),
-                                    _buildRadioButton(
-                                      AppLocalizations.of(context)
-                                          .negativeFeedback,
-                                      FeedbackType.negativeFeedback,
-                                    ),
-                                  ],
-                                ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            if (isAdmin)
-                              _buildSwitchTile(
-                                AppLocalizations.of(context).positiveFeedback,
-                                AppLocalizations.of(context).positiveFeedbackD,
-                                _positiveFeedbackSwitch,
-                                (value) {
-                                  setState(
-                                    () {
-                                      _positiveFeedbackSwitch = value;
-                                      _isPositiveFeedback = value ? 1 : 0;
-                                      _writeConfigurationState();
-                                    },
-                                  );
-                                },
-                              ),
-                            if (isAdmin)
-                              _buildSwitchTile(
-                                AppLocalizations.of(context).angleCorrection,
-                                AppLocalizations.of(context).angleCorrectionD,
-                                _angleCorrectionSwitch,
-                                (value) {
-                                  setState(
-                                    () {
-                                      _angleCorrectionSwitch = value;
-                                      _isAngleCorrected = value ? 1 : 0;
-                                      _writeConfigurationState();
-                                    },
-                                  );
-                                },
-                              ),
-                            _buildSwitchTile(
-                              AppLocalizations.of(context).dynamicRange,
-                              AppLocalizations.of(context).dynamicRangeD,
-                              _aiModeSwitch,
-                              (value) {
-                                setState(
-                                  () {
-                                    _aiModeSwitch = value;
-                                    _isAIon = value ? 1 : 0;
-                                    _writeConfigurationState();
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (_selectedFeedback != FeedbackType.noFeedback)
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: Container(
-                          padding: EdgeInsets.all(20),
-                          child: Column(
-                            children: [
-                              if (_selectedFeedback !=
-                                  FeedbackType.negativeFeedback)
-                                CustomColorPicker(
-                                  UniqueKey(),
-                                  AppLocalizations.of(context)
-                                      .positiveFeedbackColor,
-                                  _ledOkColor,
-                                  _updateOkColor,
-                                ),
-                              if (_selectedFeedback ==
-                                      FeedbackType.negativeFeedback ||
-                                  _selectedFeedback ==
-                                      FeedbackType.overpressureFeedback)
-                                CustomColorPicker(
-                                  UniqueKey(),
-                                  AppLocalizations.of(context)
-                                      .negativeFeedbackColor,
-                                  _ledNokColor,
-                                  _updateNokColor,
-                                ),
-                              if (_selectedFeedback ==
-                                  FeedbackType.simpleFeedback)
-                                CustomColorPicker(
-                                  UniqueKey(),
-                                  AppLocalizations.of(context)
-                                      .simpleAssistanceColor,
-                                  _ledSimpleAssistanceColor,
-                                  _updateSimpleAssistanceColor,
-                                ),
-                              if (_selectedFeedback ==
-                                  FeedbackType.advancedFeedback)
-                                CustomColorPicker(
-                                  UniqueKey(),
-                                  AppLocalizations.of(context)
-                                      .tipAssistanceColor,
-                                  _ledTipAssistanceColor,
-                                  _updateTipAssistanceColor,
-                                ),
-                              if (_selectedFeedback ==
-                                  FeedbackType.advancedFeedback)
-                                CustomColorPicker(
-                                  UniqueKey(),
-                                  AppLocalizations.of(context)
-                                      .fingerAssistanceColor,
-                                  _ledFingerAssistanceColor,
-                                  _updateFingerAssistanceColor,
-                                ),
-                            ],
                           ),
                         ),
-                      ),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        width: double.infinity,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _buildResetToDefaultsButton(),
-                            SizedBox(
-                              height: 10,
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              children: [
+                                if (isAdmin)
+                                  _buildSwitchTile(
+                                    AppLocalizations.of(context)
+                                        .positiveFeedback,
+                                    AppLocalizations.of(context)
+                                        .positiveFeedbackD,
+                                    _positiveFeedbackSwitch,
+                                    (value) {
+                                      setState(
+                                        () {
+                                          _positiveFeedbackSwitch = value;
+                                          _isPositiveFeedback = value ? 1 : 0;
+                                          _writeConfigurationState();
+                                        },
+                                      );
+                                    },
+                                  ),
+                                if (isAdmin)
+                                  _buildSwitchTile(
+                                    AppLocalizations.of(context)
+                                        .angleCorrection,
+                                    AppLocalizations.of(context)
+                                        .angleCorrectionD,
+                                    _angleCorrectionSwitch,
+                                    (value) {
+                                      setState(
+                                        () {
+                                          _angleCorrectionSwitch = value;
+                                          _isAngleCorrected = value ? 1 : 0;
+                                          _writeConfigurationState();
+                                        },
+                                      );
+                                    },
+                                  ),
+                                _buildSwitchTile(
+                                  AppLocalizations.of(context).dynamicRange,
+                                  AppLocalizations.of(context).dynamicRangeD,
+                                  _aiModeSwitch,
+                                  (value) {
+                                    setState(
+                                      () {
+                                        _aiModeSwitch = value;
+                                        _isAIon = value ? 1 : 0;
+                                        _writeConfigurationState();
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
-                            _buildCalibrateButton(),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            _buildLockButton(),
-                          ],
+                          ),
                         ),
-                      ),
+                        if (_selectedFeedback != FeedbackType.noFeedback)
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            child: Container(
+                              padding: EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  if (_selectedFeedback !=
+                                      FeedbackType.negativeFeedback)
+                                    CustomColorPicker(
+                                      UniqueKey(),
+                                      AppLocalizations.of(context)
+                                          .positiveFeedbackColor,
+                                      _ledOkColor,
+                                      _updateOkColor,
+                                    ),
+                                  if (_selectedFeedback ==
+                                          FeedbackType.negativeFeedback ||
+                                      _selectedFeedback ==
+                                          FeedbackType.overpressureFeedback)
+                                    CustomColorPicker(
+                                      UniqueKey(),
+                                      AppLocalizations.of(context)
+                                          .negativeFeedbackColor,
+                                      _ledNokColor,
+                                      _updateNokColor,
+                                    ),
+                                  if (_selectedFeedback ==
+                                      FeedbackType.simpleFeedback)
+                                    CustomColorPicker(
+                                      UniqueKey(),
+                                      AppLocalizations.of(context)
+                                          .simpleAssistanceColor,
+                                      _ledSimpleAssistanceColor,
+                                      _updateSimpleAssistanceColor,
+                                    ),
+                                  if (_selectedFeedback ==
+                                      FeedbackType.advancedFeedback)
+                                    CustomColorPicker(
+                                      UniqueKey(),
+                                      AppLocalizations.of(context)
+                                          .tipAssistanceColor,
+                                      _ledTipAssistanceColor,
+                                      _updateTipAssistanceColor,
+                                    ),
+                                  if (_selectedFeedback ==
+                                      FeedbackType.advancedFeedback)
+                                    CustomColorPicker(
+                                      UniqueKey(),
+                                      AppLocalizations.of(context)
+                                          .fingerAssistanceColor,
+                                      _ledFingerAssistanceColor,
+                                      _updateFingerAssistanceColor,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          child: Container(
+                            padding: EdgeInsets.all(20),
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildResetToDefaultsButton(),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                _buildCalibrateButton(),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                _buildLockButton(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
     );
   }
 }

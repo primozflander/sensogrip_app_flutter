@@ -342,7 +342,7 @@ class Functions {
                               _form.currentState.save();
                             }
                             Navigator.of(context).pop(dropdownValue);
-                            SystemChrome.setEnabledSystemUIOverlays([]);
+                            SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
                           },
                           child: Text(AppLocalizations.of(context).yes),
                         ),

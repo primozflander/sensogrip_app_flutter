@@ -23,7 +23,7 @@ class _DisplayLockedState extends State<DisplayLocked> {
   bool _isLoading = false;
 
   void _submitData() async {
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     final isValid = _form.currentState.validate();
     if (!isValid) {
       return;
@@ -185,8 +185,8 @@ class _DisplayLockedState extends State<DisplayLocked> {
                           color: Colors.grey,
                           fontFamily: 'Quicksand',
                         ),
-                        onSaved: (_) =>
-                            SystemChrome.setEnabledSystemUIOverlays([]),
+                        onSaved: (_) => SystemChrome.setEnabledSystemUIMode(
+                            SystemUiMode.immersiveSticky),
                         validator: (value) {
                           if (value != "2908") {
                             return AppLocalizations.of(context).passwordF;

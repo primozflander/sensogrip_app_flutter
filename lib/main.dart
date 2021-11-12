@@ -35,7 +35,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Wakelock.enable();
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     final ThemeData theme = ThemeData();
@@ -60,9 +61,10 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Quicksand',
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        initialRoute: showOnboarding != null
-            ? BLECheckScreen.routeName
-            : OnboardingScreen.routeName,
+        // initialRoute: showOnboarding != null
+        //     ? BLECheckScreen.routeName
+        //     : OnboardingScreen.routeName,
+        initialRoute: ChartScreen.routeName,
         routes: {
           BLECheckScreen.routeName: (context) => BLECheckScreen(),
           ProfilesScreen.routeName: (context) => ProfilesScreen(),
