@@ -61,10 +61,10 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Quicksand',
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        // initialRoute: showOnboarding != null
-        //     ? BLECheckScreen.routeName
-        //     : OnboardingScreen.routeName,
-        initialRoute: ChartScreen.routeName,
+        initialRoute: showOnboarding != null
+            ? BLECheckScreen.routeName
+            : OnboardingScreen.routeName,
+        // initialRoute: ChartScreen.routeName,
         routes: {
           BLECheckScreen.routeName: (context) => BLECheckScreen(),
           ProfilesScreen.routeName: (context) => ProfilesScreen(),

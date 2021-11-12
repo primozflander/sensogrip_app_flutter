@@ -412,7 +412,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
       body:
-          !isReady //---------------------------------------------------------------------------------------------------------
+          !isReady
               ? Center(
                   child: CircularProgressIndicator(),
                 )
