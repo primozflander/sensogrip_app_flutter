@@ -28,7 +28,7 @@ class DisplayChart extends StatefulWidget {
 }
 
 class DisplayChartState extends State<DisplayChart> {
-  LineChartController controller;
+  LineChartController _controller;
 
   static const int VISIBLE_COUNT = 6000;
   int _removalCounter = 0;
@@ -38,7 +38,7 @@ class DisplayChartState extends State<DisplayChart> {
   bool _drawSpeed = false;
 
   void _initController() {
-    controller = LineChartController(
+    _controller = LineChartController(
       infoTextSize: 20,
       infoTextColor: Colors.grey,
       noDataText: AppLocalizations.of(context).noDataToDisplay,
@@ -79,15 +79,15 @@ class DisplayChartState extends State<DisplayChart> {
       dragXEnabled: true,
       dragYEnabled: true,
     );
-    LineData data = controller?.data;
+    LineData data = _controller?.data;
     if (data == null) {
       data = LineData();
-      controller.data = data;
+      _controller.data = data;
     }
   }
 
   void _addEntry(Map<String, int> dataEntry) {
-    LineData data = controller.data;
+    LineData data = _controller.data;
     if (data != null) {
       ILineDataSet set = data.getDataSetByIndex(0);
       if (set == null) {
@@ -177,41 +177,32 @@ class DisplayChartState extends State<DisplayChart> {
         _removalCounter++;
       }
       data.notifyDataChanged();
-      controller.setVisibleXRangeMaximum(300);
-      controller.moveViewToX(data.getEntryCount().toDouble());
-      controller.state?.setStateIfNotDispose();
+      _controller.setVisibleXRangeMaximum(300);
+      _controller.moveViewToX(data.getEntryCount().toDouble());
+      _controller.state?.setStateIfNotDispose();
     }
   }
 
   void _addEntries() {
     Future.delayed(Duration.zero).then((_) {
       _clearChart();
+      _controller.axisRight.setAxisMaximum(1000);
+      _controller.axisLeft.setAxisMaximum(1000);
+      _controller.axisRight.setAxisMinimum(0);
+      _controller.axisLeft.setAxisMinimum(0);
       widget.dataToDisplay.forEach(
         (entry) {
           _addEntry(entry);
         },
       );
-      controller.animator.reset();
-      controller.animator.animateY2(350, Easing.EaseInCubic);
+      _controller.animator.reset();
+      _controller.animator.animateY2(350, Easing.EaseInCubic);
     });
   }
-  //   if (controller.state == null) {
-  //     Timer(Duration(milliseconds: 500), _refresh);
-  //   } else {
-  //     _clearChart();
-  //     widget.dataToDisplay.forEach(
-  //       (entry) {
-  //         _addEntry(entry);
-  //       },
-  //     );
-  //     controller.animator.reset();
-  //     controller.animator.animateY2(350, Easing.EaseInCubic);
-  //   }
-  // }
 
   void _clearChart() {
-    controller.data?.clearValues();
-    controller.state?.setStateIfNotDispose();
+    _controller.data?.clearValues();
+    _controller.state?.setStateIfNotDispose();
     //controller.viewPortHandler.fitScreen1();
   }
 
@@ -373,7 +364,7 @@ class DisplayChartState extends State<DisplayChart> {
             height: 5,
           ),
           Expanded(
-            child: LineChart(controller),
+            child: LineChart(_controller),
           ),
         ],
       ),

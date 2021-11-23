@@ -141,5 +141,7 @@
     "noPencilT": "Connect your Sensogrip pencil to unlock additional features!",
     "limitYScaleTo500": "Limit y scale to 500",
     "limitYScaleTo1000": "Limit y scale to 1000",
-    "removeLimitYScale": "Remove y scale limit"
+    "removeLimitYScale": "Remove y scale limit",
+    "quit": "Quit",
+    "allCharts": "All Charts"
 }

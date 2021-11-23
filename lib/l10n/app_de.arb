@@ -141,5 +141,7 @@
     "noPencilT": "Verbinden Sie Ihren Sensogrip-Stift, um zusätzliche Funktionen freizuschalten!",
     "limitYScaleTo500": "Die Y-Skala auf 500 begrenzen",
     "limitYScaleTo1000": "Die Y-Skala auf 1000 begrenzen",
-    "removeLimitYScale": "Y-Skalierungsgrenze aufheben"
+    "removeLimitYScale": "Y-Skalierungsgrenze aufheben",
+    "quit": "Beenden",
+    "allCharts": "All Tabellen"
 }

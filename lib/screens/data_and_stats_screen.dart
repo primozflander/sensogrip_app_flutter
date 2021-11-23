@@ -3,10 +3,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../widgets/chart_with_statistics.dart';
 import '../models/text_styles.dart';
+import '../models/data.dart';
+import '../helpers/sql_helper.dart';
 
 enum DisplayOptions {
   SingleChart,
   TwoCharts,
+  AllCharts,
 }
 
 class DataAndStatsScreen extends StatefulWidget {
@@ -16,7 +19,70 @@ class DataAndStatsScreen extends StatefulWidget {
 }
 
 class _DataAndStatsScreenState extends State<DataAndStatsScreen> {
-  bool _singleChart = true;
+  int _chartMode = 0;
+  List<Data> _data;
+  ScrollController _controller = ScrollController(keepScrollOffset: true);
+
+  void _getDataFromDatabase() async {
+    List<Data> dataFromDb = await SqlHelper.getData();
+    setState(
+      () {
+        _data = dataFromDb;
+        print("data from db: $_data");
+        // print("data read from database");
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    print('init data and stats screen');
+    _getDataFromDatabase();
+    super.initState();
+  }
+
+  Widget _buildNoDataAvailableText() {
+    return Center(
+      child: Container(
+        child: Text(
+          AppLocalizations.of(context).noDataToDisplay,
+          style: TextStyles.textGrey,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChart() {
+    switch (_chartMode) {
+      case 0:
+        {
+          return ChartWithStatistics(_chartMode);
+        }
+        break;
+
+      case 1:
+        {
+          return Column(
+            children: [
+              ChartWithStatistics(_chartMode),
+              ChartWithStatistics(_chartMode)
+            ],
+          );
+        }
+        break;
+
+      default:
+        {
+          return ListView.builder(
+            controller: _controller,
+            itemCount: _data.length,
+            // reverse: true,
+            itemBuilder: (ctx, i) => ChartWithStatistics(_chartMode, i),
+          );
+        }
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +99,11 @@ class _DataAndStatsScreenState extends State<DataAndStatsScreen> {
               setState(
                 () {
                   if (selectedValue == DisplayOptions.SingleChart) {
-                    _singleChart = true;
-                  } else {
-                    _singleChart = false;
-                  }
+                    _chartMode = 0;
+                  } else if (selectedValue == DisplayOptions.TwoCharts) {
+                    _chartMode = 1;
+                  } else
+                    _chartMode = 2;
                 },
               );
             },
@@ -50,19 +117,15 @@ class _DataAndStatsScreenState extends State<DataAndStatsScreen> {
                 child: Text(AppLocalizations.of(context).twoCharts),
                 value: DisplayOptions.TwoCharts,
               ),
+              PopupMenuItem(
+                child: Text(AppLocalizations.of(context).allCharts),
+                value: DisplayOptions.AllCharts,
+              ),
             ],
           ),
         ],
       ),
-      body: _singleChart
-          ? ChartWithStatistics(isSmall: false)
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ChartWithStatistics(isSmall: true),
-                ChartWithStatistics(isSmall: true),
-              ],
-            ),
+      body: _data == null ? _buildNoDataAvailableText() : _buildChart(),
     );
   }
 }

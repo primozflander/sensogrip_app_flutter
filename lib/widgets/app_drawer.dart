@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../providers/users_provider.dart';
+import '../providers/ble_provider.dart';
 import '../screens/settings_screen.dart';
 import '../screens/info_screen.dart';
 import '../screens/profiles_screen.dart';
@@ -32,6 +33,7 @@ class AppDrawer extends StatelessWidget {
       );
     }
 
+    final bleProvider = Provider.of<BleProvider>(context);
     return Drawer(
       child: Column(
         children: [
@@ -98,7 +100,9 @@ class AppDrawer extends StatelessWidget {
               color: Colors.white,
             ),
             title: Text(
-              AppLocalizations.of(context).disconnect,
+              bleProvider.isConnected
+                  ? AppLocalizations.of(context).disconnectDevice
+                  : AppLocalizations.of(context).quit,
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.white,

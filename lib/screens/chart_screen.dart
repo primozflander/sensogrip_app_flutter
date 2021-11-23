@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:camera/camera.dart';
 import 'package:screen_recorder_flutter/screen_recorder_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:native_device_orientation/native_device_orientation.dart';
+// import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/realtime_chart.dart';
@@ -146,26 +146,29 @@ class _ChartScreenState extends State<ChartScreen> {
   }
 
   Future<bool> _onWillPop() {
+    final bleProvider = Provider.of<BleProvider>(context, listen: false);
     return showDialog(
       context: context,
       builder: (context) =>
           AlertDialog(
             title: Text(
-              AppLocalizations.of(context).disconnectDevice,
+              bleProvider.isConnected
+                  ? AppLocalizations.of(context).disconnectDevice
+                  : AppLocalizations.of(context).quit,
               style: TextStyle(
                 fontSize: 22,
                 color: Colors.black,
               ),
             ),
-            content: Text(AppLocalizations.of(context).disconnectDeviceQ),
+            content: Text(bleProvider.isConnected
+                ? AppLocalizations.of(context).disconnectDevice
+                : AppLocalizations.of(context).quit),
             actions: <Widget>[
               TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(AppLocalizations.of(context).no)),
               TextButton(
                   onPressed: () {
-                    final bleProvider =
-                        Provider.of<BleProvider>(context, listen: false);
                     if (bleProvider.isConnected) {
                       bleProvider.bleDevice.disconnect();
                     } else {
@@ -276,7 +279,6 @@ class _ChartScreenState extends State<ChartScreen> {
                 _maxYAxisValue = null;
             },
           );
-          print("trigger");
         },
         icon: Icon(Icons.more_vert),
         itemBuilder: (_) => [
