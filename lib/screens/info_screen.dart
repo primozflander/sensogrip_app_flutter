@@ -22,10 +22,9 @@ class _InfoScreenState extends State<InfoScreen> {
   @override
   void initState() {
     print('<info screen init>');
-    _secondsInUse = Provider.of<BleProvider>(context, listen: false)
-        .findReceivedDataByName('secondsInUse');
-    _secondsInRange = Provider.of<BleProvider>(context, listen: false)
-        .findReceivedDataByName('secondsInRange');
+    final bleProvider = Provider.of<BleProvider>(context, listen: false);
+    _secondsInUse = bleProvider.findReceivedDataByName('secondsInUse');
+    _secondsInRange = bleProvider.findReceivedDataByName('secondsInRange');
     // _getId();
     super.initState();
   }
@@ -44,6 +43,7 @@ class _InfoScreenState extends State<InfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bleProvider = Provider.of<BleProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -62,109 +62,117 @@ class _InfoScreenState extends State<InfoScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ListTile(
-                  leading: Icon(
-                    Icons.timer,
-                    size: 26,
-                  ),
-                  title: Text(AppLocalizations.of(context).pencilUsage +
-                      ' $_secondsInUse ' +
-                      AppLocalizations.of(context).seconds),
-                  subtitle: Text(AppLocalizations.of(context).pencilUsageD),
-                  trailing: ElevatedButton(
-                    onPressed: () {
-                      return showDialog(
-                        context: context,
-                        builder: (context) =>
-                            AlertDialog(
-                              title: Text(
-                                  AppLocalizations.of(context).resetCounter),
-                              content: Text(
-                                  AppLocalizations.of(context).resetCounterQ),
-                              actions: <Widget>[
-                                TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(false),
-                                    child:
-                                        Text(AppLocalizations.of(context).no)),
-                                TextButton(
-                                    onPressed: () {
-                                      Provider.of<BleProvider>(context,
-                                              listen: false)
-                                          .findByName(
-                                              Uuid.resetMinutesPassedInUse)
-                                          .write([0x0]);
-                                      Navigator.of(context).pop(true);
-                                      print('counter reset');
-                                      setState(() {
-                                        _secondsInUse = 0;
-                                      });
-                                    },
-                                    child:
-                                        Text(AppLocalizations.of(context).yes)),
-                              ],
-                            ) ??
-                            false,
-                      );
-                    },
-                    child: Text(AppLocalizations.of(context).reset),
-                    style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).colorScheme.secondary,
-                    ),
-                  ),
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.timer,
-                    size: 26,
-                  ),
-                  title: Text(AppLocalizations.of(context).pencilInRangeUsage +
-                      ' $_secondsInRange ' +
-                      AppLocalizations.of(context).seconds),
-                  subtitle:
-                      Text(AppLocalizations.of(context).pencilInRangeUsageD),
-                  trailing: ElevatedButton(
-                    onPressed: () {
-                      return showDialog(
-                        context: context,
-                        builder: (context) =>
-                            AlertDialog(
-                              title: Text(
-                                  AppLocalizations.of(context).resetCounter),
-                              content: Text(
-                                  AppLocalizations.of(context).resetCounterQ),
-                              actions: <Widget>[
-                                TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(false),
-                                    child:
-                                        Text(AppLocalizations.of(context).no)),
-                                TextButton(
-                                    onPressed: () {
-                                      Provider.of<BleProvider>(context,
-                                              listen: false)
-                                          .findByName(
-                                              Uuid.resetMinutesPassedInRange)
-                                          .write([0x0]);
-                                      Navigator.of(context).pop(true);
-                                      print('counter reset');
-                                      setState(() {
-                                        _secondsInRange = 0;
-                                      });
-                                    },
-                                    child:
-                                        Text(AppLocalizations.of(context).yes)),
-                              ],
-                            ) ??
-                            false,
-                      );
-                    },
-                    child: Text(AppLocalizations.of(context).reset),
-                    style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).colorScheme.secondary,
-                    ),
-                  ),
-                ),
+                bleProvider.isConnected
+                    ? ListTile(
+                        leading: Icon(
+                          Icons.timer,
+                          size: 26,
+                        ),
+                        title: Text(AppLocalizations.of(context).pencilUsage +
+                            ' $_secondsInUse ' +
+                            AppLocalizations.of(context).seconds),
+                        subtitle:
+                            Text(AppLocalizations.of(context).pencilUsageD),
+                        trailing: ElevatedButton(
+                          onPressed: () {
+                            return showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  AlertDialog(
+                                    title: Text(AppLocalizations.of(context)
+                                        .resetCounter),
+                                    content: Text(AppLocalizations.of(context)
+                                        .resetCounterQ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(false),
+                                          child: Text(
+                                              AppLocalizations.of(context).no)),
+                                      TextButton(
+                                          onPressed: () {
+                                            Provider.of<BleProvider>(context,
+                                                    listen: false)
+                                                .findByName(Uuid
+                                                    .resetMinutesPassedInUse)
+                                                .write([0x0]);
+                                            Navigator.of(context).pop(true);
+                                            print('counter reset');
+                                            setState(() {
+                                              _secondsInUse = 0;
+                                            });
+                                          },
+                                          child: Text(
+                                              AppLocalizations.of(context)
+                                                  .yes)),
+                                    ],
+                                  ) ??
+                                  false,
+                            );
+                          },
+                          child: Text(AppLocalizations.of(context).reset),
+                          style: ElevatedButton.styleFrom(
+                            primary: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      )
+                    : Container(),
+                bleProvider.isConnected
+                    ? ListTile(
+                        leading: Icon(
+                          Icons.timer,
+                          size: 26,
+                        ),
+                        title: Text(
+                            AppLocalizations.of(context).pencilInRangeUsage +
+                                ' $_secondsInRange ' +
+                                AppLocalizations.of(context).seconds),
+                        subtitle: Text(
+                            AppLocalizations.of(context).pencilInRangeUsageD),
+                        trailing: ElevatedButton(
+                          onPressed: () {
+                            return showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  AlertDialog(
+                                    title: Text(AppLocalizations.of(context)
+                                        .resetCounter),
+                                    content: Text(AppLocalizations.of(context)
+                                        .resetCounterQ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(false),
+                                          child: Text(
+                                              AppLocalizations.of(context).no)),
+                                      TextButton(
+                                          onPressed: () {
+                                            Provider.of<BleProvider>(context,
+                                                    listen: false)
+                                                .findByName(Uuid
+                                                    .resetMinutesPassedInRange)
+                                                .write([0x0]);
+                                            Navigator.of(context).pop(true);
+                                            print('counter reset');
+                                            setState(() {
+                                              _secondsInRange = 0;
+                                            });
+                                          },
+                                          child: Text(
+                                              AppLocalizations.of(context)
+                                                  .yes)),
+                                    ],
+                                  ) ??
+                                  false,
+                            );
+                          },
+                          child: Text(AppLocalizations.of(context).reset),
+                          style: ElevatedButton.styleFrom(
+                            primary: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      )
+                    : Container(),
                 // ListTile(
                 //   leading: Icon(
                 //     Icons.edit,

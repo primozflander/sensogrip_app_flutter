@@ -58,7 +58,6 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
     await SqlHelper.insertUser(newUser);
     await _getUsersFromDatabase();
     var userIndex = _users.indexWhere((user) => user.name == newUser.name);
-    print('userindex ------------> $userIndex');
     _controller.jumpToPage(userIndex);
     setState(() {
       _index = userIndex;
@@ -125,10 +124,8 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var index = prefs.getInt('profilesScrollIndex');
     if (index != null) {
-      print('userindex ------------> $index');
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_controller.hasClients) {
-          print('$index -------------->Success');
           _controller.jumpToPage(index);
         }
       });
@@ -197,7 +194,6 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       prefs.setInt('profilesScrollIndex', index);
-                      print('index saved-------------> $index');
                     },
                     itemBuilder: (ctx, i) {
                       return Transform.scale(

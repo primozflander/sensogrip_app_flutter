@@ -35,7 +35,7 @@ class BleProvider with ChangeNotifier {
 
   void setIsConnected(bool state) {
     _isConnected = state;
-    notifyListeners();
+    //notifyListeners();
   }
 
   bool get isConnected {

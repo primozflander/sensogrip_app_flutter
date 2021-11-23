@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -22,8 +23,10 @@ class RealtimeChart extends StatefulWidget {
   final StreamController<List<int>> streamController;
   final bool isSmall;
   final Function handler;
+  final double maxYAxisValue;
 
-  RealtimeChart(this.streamController, this.handler, this.isSmall);
+  RealtimeChart(this.streamController, this.handler, this.isSmall,
+      [this.maxYAxisValue]);
 
   @override
   State<StatefulWidget> createState() {
@@ -69,9 +72,16 @@ class RealtimeChartState extends State<RealtimeChart>
       },
       axisLeftSettingFunction: (axisLeft, controller) {
         axisLeft..enabled = false;
+        // axisLeft..axisMaximum = double.infinity;
+        // axisLeft..axisMinimum = 0.0;
       },
+
       axisRightSettingFunction: (axisRight, controller) {
         axisRight..enabled = true;
+
+        // axisRight..axisMinimum = 0.0;
+        // axisRight..axisMaximum = double.infinity;
+        // axisRight..useAutoScaleRestrictionMax = true;
       },
       drawBorders: true,
       borderColor: Colors.grey,
@@ -86,6 +96,8 @@ class RealtimeChartState extends State<RealtimeChart>
       scaleYEnabled: true,
       dragXEnabled: true,
       dragYEnabled: true,
+      // autoScaleMinMaxEnabled: true,
+      // autoScaleMinMaxEnabled: false,
     );
     LineData data = _controller?.data;
     if (data == null) {
@@ -94,7 +106,20 @@ class RealtimeChartState extends State<RealtimeChart>
     }
   }
 
+  void _adaptYScale() {
+    if (widget.maxYAxisValue != null) {
+      _controller.axisRight.setAxisMaximum(widget.maxYAxisValue);
+      _controller.axisLeft.setAxisMaximum(widget.maxYAxisValue);
+    } else {
+      _controller.axisRight.resetAxisMaximum();
+      _controller.axisLeft.resetAxisMaximum();
+    }
+    _controller.axisRight.setAxisMinimum(0);
+    _controller.axisLeft.setAxisMinimum(0);
+  }
+
   void _addEntry(Map<String, dynamic> streamData) {
+    _adaptYScale();
     LineData data = _controller.data;
     if (data != null) {
       ILineDataSet set = data.getDataSetByIndex(0);

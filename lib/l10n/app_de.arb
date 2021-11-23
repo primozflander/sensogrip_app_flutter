@@ -21,7 +21,7 @@
     "hello": "Hallo",
     "dataAndStats": "Daten und Statistik",
     "settings": "Einstellungen",
-    "pencilInfo": "Informationen zum Stift",
+    "pencilInfo": "Infos über den Stift und die App",
     "disconnect": "Verbindung trennen",
     "disconnectDevice": "Verbindung zum Stift trennen",
     "disconnectDeviceQ": "Sind Sie sicher, dass Sie die Verbindung zum Stift trennen möchten?",
@@ -136,5 +136,10 @@
     "cloudServiceD": "Speichern Sie Ihre Daten sicher in der Cloud.",
     "lockedFeaturesD": "Einige Funktionen der App sind derzeit gesperrt. Geben Sie den richtigen Code ein, um den vollen Funktionsumfang freizuschalten.",
     "enterPassword": "Kennwort eingeben",
-    "passwordF": "Kennwort ist nicht gültig."
+    "passwordF": "Kennwort ist nicht gültig.",
+    "continueWithoutPen": "Fortfahren ohne Stift",
+    "noPencilT": "Verbinden Sie Ihren Sensogrip-Stift, um zusätzliche Funktionen freizuschalten!",
+    "limitYScaleTo500": "Die Y-Skala auf 500 begrenzen",
+    "limitYScaleTo1000": "Die Y-Skala auf 1000 begrenzen",
+    "removeLimitYScale": "Y-Skalierungsgrenze aufheben"
 }

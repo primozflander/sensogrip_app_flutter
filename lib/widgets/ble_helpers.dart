@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../providers/ble_provider.dart';
+import '../screens/profiles_screen.dart';
 
 class BluetoothOffScreen extends StatelessWidget {
   const BluetoothOffScreen({Key key, this.state}) : super(key: key);
@@ -50,6 +51,22 @@ class FindDevicesScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(AppLocalizations.of(context).findDevices),
+        actions: [
+          TextButton.icon(
+            onPressed: () {
+              Navigator.of(context).pushNamed(ProfilesScreen.routeName);
+              //----------->
+            },
+            icon: Icon(
+              Icons.login,
+              color: Colors.white,
+            ),
+            label: Text(
+              AppLocalizations.of(context).continueWithoutPen,
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ),
+          )
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () =>

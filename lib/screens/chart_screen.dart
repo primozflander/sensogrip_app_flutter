@@ -22,10 +22,14 @@ import '../helpers/functions.dart';
 import '../helpers/sql_helper.dart';
 import '../providers/ble_provider.dart';
 import '../providers/users_provider.dart';
+import '../screens/connect_to_device_screen.dart';
 
 enum ViewOptions {
   ShowChart,
   ShowChartAndCamera,
+  LimitYScaleTo500,
+  LimitYScaleTo1000,
+  ResetYScaleLimit
 }
 
 class ChartScreen extends StatefulWidget {
@@ -42,6 +46,7 @@ class _ChartScreenState extends State<ChartScreen> {
   bool _isCameraReady = false;
   CameraController _controller;
   List<String> _currentMeasurements = [];
+  double _maxYAxisValue;
 
   void _checkIfLocked() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -81,6 +86,7 @@ class _ChartScreenState extends State<ChartScreen> {
         ScreenRecorderFlutter.stopScreenRecord;
       }
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      final DateTime measEndTimestamp = DateTime.now();
       await Functions.saveMeasurementDialog(context).then(
         (measurementDescription) {
           print('value from drop down $measurementDescription');
@@ -89,14 +95,15 @@ class _ChartScreenState extends State<ChartScreen> {
                 .bleDevice
                 .name
                 .substring(9);
-            _saveMeasurementToDb(
-                _currentMeasurements, measurementDescription, pencilName);
-            _saveMeasurementToFile(
-                _currentMeasurements, measurementDescription, pencilName);
+            _saveMeasurementToDb(_currentMeasurements, measurementDescription,
+                pencilName, measEndTimestamp);
+            _saveMeasurementToFile(_currentMeasurements, measurementDescription,
+                pencilName, measEndTimestamp);
           }
         },
       );
     }
+    setState(() {});
   }
 
   void _addMeasurementPoint(Map<String, dynamic> data) {
@@ -104,8 +111,8 @@ class _ChartScreenState extends State<ChartScreen> {
         '${data['timestamp']},${data['tipSensorValue']},${data['tipSensorUpperRange']},${data['tipSensorLowerRange']},${data['fingerSensorValue']},${data['fingerSensorUpperRange']},${data['fingerSensorLowerRange']},${data['angle']},${data['speed']},${data['accX']},${data['accY']},${data['accZ']},${data['gyroX']},${data['gyroY']},${data['gyroZ']}');
   }
 
-  void _saveMeasurementToDb(
-      List<String> data, String description, String pencilName) {
+  void _saveMeasurementToDb(List<String> data, String description,
+      String pencilName, DateTime timestamp) {
     final user =
         Provider.of<UsersProvider>(context, listen: false).selectedUser;
     Data dbData = Data(
@@ -115,23 +122,19 @@ class _ChartScreenState extends State<ChartScreen> {
       description: description,
       pencilname: pencilName,
       measurement: data.join('_'),
-      timestamp: DateFormat('dd.MM.yyyy kk:mm:ss').format(
-        DateTime.now(),
-      ),
+      timestamp: DateFormat('dd.MM.yyyy kk:mm:ss').format(timestamp),
     );
     SqlHelper.insertData(dbData.toMap());
   }
 
-  void _saveMeasurementToFile(
-      List<String> data, String description, String pencilName) async {
+  void _saveMeasurementToFile(List<String> data, String description,
+      String pencilName, DateTime timestamp) async {
     String fileHeader =
         'timestamp,tipPressure,tipUpperRange,tipLowerRange,fingerPressure,fingerUpperRange,fingerLowerRange,angle,writtingSpeed,accX,accY,accZ,gyroX,gyroY,gyroZ';
     data.insert(0, fileHeader);
     final userName =
         Provider.of<UsersProvider>(context, listen: false).selectedUser.name;
-    String formattedDate = DateFormat('dd.MM.yyyy_kk.mm.ss').format(
-      DateTime.now(),
-    );
+    String formattedDate = DateFormat('dd.MM.yyyy_kk.mm.ss').format(timestamp);
     await getExternalStorageDirectory().then(
       (directory) {
         print(directory);
@@ -161,13 +164,20 @@ class _ChartScreenState extends State<ChartScreen> {
                   child: Text(AppLocalizations.of(context).no)),
               TextButton(
                   onPressed: () {
-                    final device =
-                        Provider.of<BleProvider>(context, listen: false)
-                            .bleDevice;
-                    // Navigator.of(context).pop(true);
-                    // Navigator.of(context)
-                    //     .pushReplacementNamed(ConnectToDeviceScreen.routeName);
-                    device.disconnect();
+                    final bleProvider =
+                        Provider.of<BleProvider>(context, listen: false);
+                    if (bleProvider.isConnected) {
+                      bleProvider.bleDevice.disconnect();
+                    } else {
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute<void>(
+                              builder: (BuildContext context) =>
+                                  ConnectToDeviceScreen()),
+                          ModalRoute.withName(ConnectToDeviceScreen.routeName));
+                    }
+                    if (_isRecording) {
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    }
                   },
                   child: Text(AppLocalizations.of(context).yes)),
             ],
@@ -178,17 +188,17 @@ class _ChartScreenState extends State<ChartScreen> {
 
   void _initCamera() async {
     List<CameraDescription> cameras = await availableCameras();
-    final orientation = await NativeDeviceOrientationCommunicator()
-        .orientation(useSensor: true);
-    DeviceOrientation camOrientaion;
-    if (orientation == NativeDeviceOrientation.landscapeRight) {
-      camOrientaion = DeviceOrientation.landscapeLeft;
-    } else {
-      camOrientaion = DeviceOrientation.landscapeRight;
-    }
-    print('orientation:-------------> $orientation $camOrientaion');
+    // final orientation = await NativeDeviceOrientationCommunicator()
+    //     .orientation(useSensor: true);
+    // DeviceOrientation camOrientaion;
+    // if (orientation == NativeDeviceOrientation.landscapeRight) {
+    //   camOrientaion = DeviceOrientation.landscapeLeft;
+    // } else {
+    //   camOrientaion = DeviceOrientation.landscapeRight;
+    // }
     _controller = CameraController(cameras.first, ResolutionPreset.max);
-    _controller.lockCaptureOrientation(camOrientaion);
+    // _controller.lockCaptureOrientation(camOrientaion);
+    // _controller.lockCaptureOrientation(DeviceOrientation.landscapeRight);
     _controller.initialize().then(
       (_) {
         if (!mounted) {
@@ -202,32 +212,15 @@ class _ChartScreenState extends State<ChartScreen> {
   }
 
   Future<void> _initScreenRecorder() async {
-    ScreenRecorderFlutter.init(onRecordingStarted: (started, msg) {
-      print("Recording $started $msg");
-    }, onRecodingCompleted: (path) {
-      print("Recording completed $path");
-    });
+    ScreenRecorderFlutter.init(
+      onRecordingStarted: (started, msg) {
+        print("Recording $started $msg");
+      },
+      onRecodingCompleted: (path) {
+        print("Recording completed $path");
+      },
+    );
   }
-
-  // void _addBleConnectionListener() {
-  //   var bleDevice = Provider.of<BleProvider>(context).bleDevice;
-  //   bleConnectionStateSubscription = bleDevice.state.listen(
-  //     (connectionState) async {
-  //       print('Event: BLE conection state state: $connectionState');
-  //       if (connectionState == BluetoothDeviceState.disconnected) {
-  //         bleConnectionStateSubscription.cancel().then(
-  //           (_) {
-  //             bleDevice.disconnect();
-  //             Navigator.of(context).pushAndRemoveUntil(
-  //                 MaterialPageRoute<void>(
-  //                     builder: (BuildContext context) => BLECheckScreen()),
-  //                 ModalRoute.withName(BLECheckScreen.routeName));
-  //           },
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
 
   @override
   void dispose() {
@@ -243,118 +236,168 @@ class _ChartScreenState extends State<ChartScreen> {
     super.initState();
   }
 
+  Widget _buildNoPencilConnected() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            height: 300,
+            child: Image.asset('assets/images/ledFeedback.png'),
+          ),
+          SizedBox(height: 75),
+          Text(
+            AppLocalizations.of(context).noPencilT,
+            style: TextStyle(color: Colors.grey, fontSize: 18),
+          ),
+          SizedBox(height: 50),
+        ],
+      ),
+    );
+  }
+
+  _buildActionsMenu() {
+    return [
+      PopupMenuButton(
+        onSelected: (ViewOptions selectedValue) {
+          setState(
+            () {
+              if (selectedValue == ViewOptions.ShowChart) {
+                _isCameraOn = false;
+                // controller?.dispose();
+              } else if (selectedValue == ViewOptions.ShowChartAndCamera) {
+                _initCamera();
+                _isCameraOn = true;
+              } else if (selectedValue == ViewOptions.LimitYScaleTo500) {
+                _maxYAxisValue = 500;
+              } else if (selectedValue == ViewOptions.LimitYScaleTo1000) {
+                _maxYAxisValue = 1000;
+              } else
+                _maxYAxisValue = null;
+            },
+          );
+          print("trigger");
+        },
+        icon: Icon(Icons.more_vert),
+        itemBuilder: (_) => [
+          PopupMenuItem(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              AppLocalizations.of(context).displayRealtimeChart,
+            ),
+            value: ViewOptions.ShowChart,
+          ),
+          PopupMenuItem(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              AppLocalizations.of(context).displayRealtimeChartAndVideo,
+            ),
+            value: ViewOptions.ShowChartAndCamera,
+          ),
+          PopupMenuItem(
+            padding: EdgeInsets.all(10),
+            child: Text(AppLocalizations.of(context).limitYScaleTo500),
+            value: ViewOptions.LimitYScaleTo500,
+          ),
+          PopupMenuItem(
+            padding: EdgeInsets.all(10),
+            child: Text(AppLocalizations.of(context).limitYScaleTo1000),
+            value: ViewOptions.LimitYScaleTo1000,
+          ),
+          PopupMenuItem(
+            padding: EdgeInsets.all(10),
+            child: Text(AppLocalizations.of(context).removeLimitYScale),
+            value: ViewOptions.ResetYScaleLimit,
+          ),
+        ],
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final bleData = Provider.of<BleProvider>(context);
+    final bleProvider = Provider.of<BleProvider>(context);
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          // automaticallyImplyLeading: false,
           centerTitle: true,
           title: Text(
             AppLocalizations.of(context).chartView,
             style: TextStyles.appBarTextStyle,
           ),
-          actions: [
-            PopupMenuButton(
-              onSelected: (ViewOptions selectedValue) {
-                setState(
-                  () {
-                    if (selectedValue == ViewOptions.ShowChart) {
-                      _isCameraOn = false;
-                      // controller?.dispose();
-                    } else {
-                      _initCamera();
-                      _isCameraOn = true;
-                    }
-                  },
-                );
-              },
-              icon: Icon(Icons.more_vert),
-              itemBuilder: (_) => [
-                PopupMenuItem(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    AppLocalizations.of(context).displayRealtimeChart,
-                    // style: TextStyle(fontSize: 14),
-                  ),
-                  value: ViewOptions.ShowChart,
-                ),
-                PopupMenuItem(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    AppLocalizations.of(context).displayRealtimeChartAndVideo,
-                    // style: TextStyle(fontSize: 14),
-                  ),
-                  value: ViewOptions.ShowChartAndCamera,
-                ),
-              ],
-            ),
-          ],
+          actions: (bleProvider.isConnected && !_isRecording)
+              ? _buildActionsMenu()
+              : [],
         ),
-        drawer: AppDrawer(_isLocked, _onWillPop),
-        body: Column(
-          children: [
-            Expanded(
-              child: Row(
+        drawer: !_isRecording ? AppDrawer(_isLocked, _onWillPop) : null,
+        body: bleProvider.isConnected
+            ? Column(
                 children: [
-                  _isLocked == false
-                      ? RealtimeChart(
-                          bleData.streamController,
-                          _saveData,
-                          _isCameraOn,
-                        )
-                      : DisplayLocked(_saveData, _isCameraOn, _unlock),
-                  if (_isCameraOn &&
-                      _isCameraReady &&
-                      _controller.value.isInitialized)
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(
-                            top: 10, left: 0, right: 10, bottom: 4),
-                        height: size.height - 150,
-                        // width: 590,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: Transform.scale(
-                            scale: 2,
-                            child: Center(
-                              child: CameraPreview(_controller),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        _isLocked == false
+                            ? RealtimeChart(
+                                bleProvider.streamController,
+                                _saveData,
+                                _isCameraOn,
+                                _maxYAxisValue,
+                              )
+                            : DisplayLocked(_saveData, _isCameraOn, _unlock),
+                        if (_isCameraOn &&
+                            _isCameraReady &&
+                            _controller.value.isInitialized)
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                  top: 10, left: 0, right: 10, bottom: 4),
+                              height: size.height - 150,
+                              // width: 590,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: Transform.scale(
+                                  scale: 2,
+                                  child: Center(
+                                    child: CameraPreview(_controller),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                      ],
                     ),
+                  ),
+                  StreamBuilder<List<dynamic>>(
+                    stream: bleProvider.streamController.stream,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<dynamic>> snapshot) {
+                      if (snapshot.hasError)
+                        return Text('Error: ${snapshot.error}');
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        var parsedData = Functions.parseStream(snapshot.data);
+                        //print('Parsed data---------> $parsedData');
+                        bleProvider.updateReceivedData(parsedData);
+                        if (_isRecording) {
+                          _addMeasurementPoint(parsedData);
+                        }
+                        return Container(
+                          height: 140,
+                          child: DisplayDataAndStats(
+                            parsedData,
+                          ),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
                 ],
-              ),
-            ),
-            StreamBuilder<List<dynamic>>(
-              stream: bleData.streamController.stream,
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<dynamic>> snapshot) {
-                if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-                if (snapshot.connectionState == ConnectionState.active) {
-                  var parsedData = Functions.parseStream(snapshot.data);
-                  //print('Parsed data---------> $parsedData');
-                  bleData.updateReceivedData(parsedData);
-                  if (_isRecording) {
-                    _addMeasurementPoint(parsedData);
-                  }
-                  return Container(
-                    height: 140,
-                    child: DisplayDataAndStats(
-                      parsedData,
-                    ),
-                  );
-                } else {
-                  return Container();
-                }
-              },
-            ),
-          ],
-        ),
+              )
+            : _buildNoPencilConnected(),
       ),
     );
   }

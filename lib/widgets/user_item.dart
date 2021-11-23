@@ -20,12 +20,16 @@ class UserItem extends StatelessWidget {
   void _selectUser(context) async {
     Navigator.of(context).pushReplacementNamed(ChartScreen.routeName);
     Provider.of<UsersProvider>(context, listen: false).setSelectedUser(user);
-    var configurationState =
-        Provider.of<UsersProvider>(context, listen: false).userConfiguration;
-    print('User selected ${user.id}');
-    await Provider.of<BleProvider>(context, listen: false)
-        .findByName(Uuid.configurationState)
-        .write(configurationState);
+    final isConnected =
+        Provider.of<BleProvider>(context, listen: false).isConnected;
+    if (isConnected) {
+      var configurationState =
+          Provider.of<UsersProvider>(context, listen: false).userConfiguration;
+      print('User selected ${user.id}');
+      await Provider.of<BleProvider>(context, listen: false)
+          .findByName(Uuid.configurationState)
+          .write(configurationState);
+    }
   }
 
   @override

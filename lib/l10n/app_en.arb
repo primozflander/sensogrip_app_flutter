@@ -21,7 +21,7 @@
     "hello": "Hello",
     "dataAndStats": "Data and Stats",
     "settings": "Settings",
-    "pencilInfo": "Pencil Info",
+    "pencilInfo": "About",
     "disconnect": "Disconnect",
     "disconnectDevice": "Disconnect device",
     "disconnectDeviceQ": "Are you sure you want to disconnect the device?",
@@ -136,5 +136,10 @@
     "cloudServiceD": "Save your data securely to the cloud.",
     "lockedFeaturesD": "Some features of the App are currently locked. Enter the correct code to unlock the full experience.",
     "enterPassword": "Enter password",
-    "passwordF": "Password is not valid."
+    "passwordF": "Password is not valid.",
+    "continueWithoutPen": "Continue without pen",
+    "noPencilT": "Connect your Sensogrip pencil to unlock additional features!",
+    "limitYScaleTo500": "Limit y scale to 500",
+    "limitYScaleTo1000": "Limit y scale to 1000",
+    "removeLimitYScale": "Remove y scale limit"
 }

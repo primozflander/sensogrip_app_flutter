@@ -74,10 +74,12 @@ class _ConnectToDeviceScreenState extends State<ConnectToDeviceScreen> {
   }
 
   void _addConnectionListener(device) {
+    final bleCharProvider = Provider.of<BleProvider>(context, listen: false);
     bleConnectionStateSubscription = device.state.listen(
       (connectionState) async {
         print('Event: BLE conection state state: $connectionState');
         if (connectionState == BluetoothDeviceState.disconnected) {
+          bleCharProvider.setIsConnected(false);
           await bleConnectionStateSubscription.cancel();
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute<void>(
@@ -88,6 +90,7 @@ class _ConnectToDeviceScreenState extends State<ConnectToDeviceScreen> {
           });
         }
         if (connectionState == BluetoothDeviceState.connected) {
+          bleCharProvider.setIsConnected(true);
           await _discoverServices(device);
           setState(() {
             _isLoading = false;

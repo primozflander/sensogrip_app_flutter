@@ -17,6 +17,7 @@ import './screens/data_and_stats_screen.dart';
 import './screens/help_screen.dart';
 import './screens/onboarding_screen.dart';
 
+// generate translations: flutter gen-l10n  
 bool showOnboarding;
 
 Future<void> main() async {
