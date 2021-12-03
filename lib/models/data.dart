@@ -8,6 +8,7 @@ class Data {
   String pencilname;
   String measurement;
   String timestamp;
+  String videofile;
 
   Data({
     @required this.id,
@@ -17,6 +18,7 @@ class Data {
     @required this.pencilname,
     @required this.measurement,
     @required this.timestamp,
+    @required this.videofile,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,6 +30,7 @@ class Data {
       'pencilname': pencilname,
       'measurement': measurement,
       'timestamp': timestamp,
+      'videofile': videofile,
     };
   }
 }

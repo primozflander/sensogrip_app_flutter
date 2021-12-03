@@ -156,6 +156,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(
           AppLocalizations.of(context).profiles,

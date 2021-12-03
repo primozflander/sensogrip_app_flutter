@@ -143,5 +143,6 @@
     "limitYScaleTo1000": "Die Y-Skala auf 1000 begrenzen",
     "removeLimitYScale": "Y-Skalierungsgrenze aufheben",
     "quit": "Beenden",
+    "quitQ": "Sind Sie sicher, dass Sie beenden wollen?",
     "allCharts": "All Tabellen"
 }

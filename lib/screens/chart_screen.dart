@@ -47,6 +47,7 @@ class _ChartScreenState extends State<ChartScreen> {
   CameraController _controller;
   List<String> _currentMeasurements = [];
   double _maxYAxisValue;
+  String _videoFile;
 
   void _checkIfLocked() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -70,6 +71,7 @@ class _ChartScreenState extends State<ChartScreen> {
     if (_isRecording == false) {
       _currentMeasurements = [];
       _isRecording = true;
+      _videoFile = "";
       if (_isCameraOn) {
         ScreenRecorderFlutter.startScreenRecord;
       }
@@ -113,6 +115,7 @@ class _ChartScreenState extends State<ChartScreen> {
 
   void _saveMeasurementToDb(List<String> data, String description,
       String pencilName, DateTime timestamp) {
+    print("testis-----------------> $_videoFile");
     final user =
         Provider.of<UsersProvider>(context, listen: false).selectedUser;
     Data dbData = Data(
@@ -123,6 +126,7 @@ class _ChartScreenState extends State<ChartScreen> {
       pencilname: pencilName,
       measurement: data.join('_'),
       timestamp: DateFormat('dd.MM.yyyy kk:mm:ss').format(timestamp),
+      videofile: _videoFile,
     );
     SqlHelper.insertData(dbData.toMap());
   }
@@ -162,7 +166,7 @@ class _ChartScreenState extends State<ChartScreen> {
             ),
             content: Text(bleProvider.isConnected
                 ? AppLocalizations.of(context).disconnectDevice
-                : AppLocalizations.of(context).quit),
+                : AppLocalizations.of(context).quitQ),
             actions: <Widget>[
               TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
@@ -191,17 +195,7 @@ class _ChartScreenState extends State<ChartScreen> {
 
   void _initCamera() async {
     List<CameraDescription> cameras = await availableCameras();
-    // final orientation = await NativeDeviceOrientationCommunicator()
-    //     .orientation(useSensor: true);
-    // DeviceOrientation camOrientaion;
-    // if (orientation == NativeDeviceOrientation.landscapeRight) {
-    //   camOrientaion = DeviceOrientation.landscapeLeft;
-    // } else {
-    //   camOrientaion = DeviceOrientation.landscapeRight;
-    // }
     _controller = CameraController(cameras.first, ResolutionPreset.max);
-    // _controller.lockCaptureOrientation(camOrientaion);
-    // _controller.lockCaptureOrientation(DeviceOrientation.landscapeRight);
     _controller.initialize().then(
       (_) {
         if (!mounted) {
@@ -221,6 +215,7 @@ class _ChartScreenState extends State<ChartScreen> {
       },
       onRecodingCompleted: (path) {
         print("Recording completed $path");
+        _videoFile = path;
       },
     );
   }
@@ -267,7 +262,6 @@ class _ChartScreenState extends State<ChartScreen> {
             () {
               if (selectedValue == ViewOptions.ShowChart) {
                 _isCameraOn = false;
-                // controller?.dispose();
               } else if (selectedValue == ViewOptions.ShowChartAndCamera) {
                 _initCamera();
                 _isCameraOn = true;

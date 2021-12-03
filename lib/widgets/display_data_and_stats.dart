@@ -30,7 +30,7 @@ class DisplayDataAndStats extends StatelessWidget {
         ),
         DisplayValue(
           AppLocalizations.of(context).writtingSpeed,
-          (receivedData['speed'] < 15) ? 0 : receivedData['speed'],
+          receivedData['speed'],
         ),
         DisplayValue(
           AppLocalizations.of(context).batteryLevel,

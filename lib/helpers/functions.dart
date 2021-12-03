@@ -125,8 +125,10 @@ class Functions {
         'timestamp': data.getUint16(0, Endian.little),
         'tipSensorValue': data.getInt16(2, Endian.little),
         'fingerSensorValue': data.getInt16(4, Endian.little),
-        'angle': data.getInt16(6, Endian.little).abs(),
-        'speed': data.getInt16(8, Endian.little),
+        'angle': data.getInt16(6, Endian.little).abs().clamp(0, 90),
+        'speed': (data.getInt16(2, Endian.little) > 15)
+            ? data.getInt16(8, Endian.little)
+            : 0,
         'batteryLevel': data.getInt16(10, Endian.little),
         'secondsInRange': data.getInt16(12, Endian.little),
         'secondsInUse': data.getInt16(14, Endian.little),
@@ -343,7 +345,8 @@ class Functions {
                               _form.currentState.save();
                             }
                             Navigator.of(context).pop(dropdownValue);
-                            SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+                            SystemChrome.setEnabledSystemUIMode(
+                                SystemUiMode.immersiveSticky);
                           },
                           child: Text(AppLocalizations.of(context).yes),
                         ),

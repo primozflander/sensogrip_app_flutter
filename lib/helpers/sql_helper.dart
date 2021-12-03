@@ -51,6 +51,7 @@ class SqlHelper {
           pencilname TEXT NOT NULL,
           measurement TEXT NOT NULL,
           timestamp TEXT NOT NULL,
+          videofile TEXT NOT NULL,
           FOREIGN KEY(userid) REFERENCES users(id)
           )''');
   }
@@ -175,6 +176,7 @@ class SqlHelper {
             pencilname: data['pencilname'],
             measurement: data['measurement'],
             timestamp: data['timestamp'],
+            videofile: data['videofile'],
           ),
         );
       },
@@ -197,6 +199,7 @@ class SqlHelper {
             pencilname: data['pencilname'],
             measurement: data['measurement'],
             timestamp: data['timestamp'],
+            videofile: data['videofile'],
           ),
         );
       },

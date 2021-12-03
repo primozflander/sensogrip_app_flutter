@@ -62,25 +62,12 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
     );
   }
 
-  // Future<void> _getPrevScrollIndex() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   var index = prefs.getDouble('dataScrollIndex');
-  //   if (index != null) {
-  //     print('dataindex ------------> $index');
-  //     Future.delayed(Duration(milliseconds: 100), () {
-  //       _controller.jumpTo(index);
-  //     });
-  //   }
-  // }
-
   void _setDataFocus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var index = prefs.getDouble('dataScrollIndex');
     if (index != null) {
-      print('dataindex ------------> $index');
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_controller.hasClients) {
-          print('$index -------------->Success');
           _controller.jumpTo(index);
         }
       });
@@ -90,7 +77,6 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
   void _saveScrollOffset() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setDouble('dataScrollIndex', _scrollOffset);
-    print('index saved-------------> $_scrollOffset');
   }
 
   void _deleteData(Data data) {
@@ -129,7 +115,6 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
     print('<data selection screen init>');
     _getDataFromDatabase();
     _setDataFocus();
-    // _getPrevScrollIndex();
     _controller = ScrollController()
       ..addListener(() {
         _scrollOffset = _controller.offset;
@@ -173,6 +158,10 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
               alignment: Alignment.center,
               child:
                   Text(AppLocalizations.of(context).date, style: headerStyle)),
+          Container(
+              width: 170,
+              alignment: Alignment.center,
+              child: Text('Video', style: headerStyle)),
         ],
       ),
     );
@@ -253,9 +242,6 @@ class _DataSelectionScreenState extends State<DataSelectionScreen> {
             child: ListView.builder(
               controller: _controller,
               itemCount: _filteredData.length,
-              // restorationId: 'index',
-              // reverse: true,
-              // key: PageStorageKey<String>('dataSelectionList'),
               itemBuilder: (ctx, i) => DataItem(
                   _filteredData[_filteredData.length - 1 - i],
                   (_filteredData[_filteredData.length - 1 - i].id ==

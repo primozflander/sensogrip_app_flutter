@@ -1,11 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:video_player/video_player.dart';
 
 import '../widgets/display_chart.dart';
 import '../providers/users_provider.dart';
 import '../screens/data_selection_screen.dart';
-// import '../models/text_styles.dart';
 import '../models/data.dart';
 import '../helpers/sql_helper.dart';
 
@@ -23,6 +25,7 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
   List<Map<String, int>> _measurement;
   Map<String, int> _statistics;
   bool _expanded = true;
+  VideoPlayerController _controller;
 
   void _parseData(Data data) {
     setState(
@@ -30,6 +33,9 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
         _data = data;
         _measurement = _parseMeasurement(_data.measurement);
         _statistics = _calculateStatistics(_measurement);
+        print('videofile: ${_data.videofile}');
+        File video = File(_data.videofile);
+        _controller = VideoPlayerController.file(video)..initialize();
       },
     );
   }
@@ -103,7 +109,6 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
     measurements.split('_').forEach(
       (measurement) {
         var splitedData = measurement.split(',');
-        // print(splitedData);
         converted.add(
           {
             'timestamp': int.parse(splitedData[0]),
@@ -119,7 +124,6 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
         );
       },
     );
-    // print(converted);
     return converted;
   }
 
@@ -188,12 +192,35 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
         ).then((data) {
           if (data != null) {
             print('selected data from widget ${data.id}');
-            // print(data.measurement);
             _parseData(data);
           }
         });
       },
       icon: Icon(Icons.search),
+      iconSize: 30,
+    );
+  }
+
+  Widget _buildVideoButton() {
+    return IconButton(
+      onPressed: () {
+        _controller.play();
+        return showDialog(
+          // barrierDismissible: false,
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Center(
+              child: _controller.value.isInitialized
+                  ? AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller),
+                    )
+                  : CircularProgressIndicator(),
+            ),
+          ),
+        );
+      },
+      icon: Icon(Icons.video_library),
       iconSize: 30,
     );
   }
@@ -236,6 +263,10 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
                       ),
                     ],
                   ),
+                ),
+                if (_data.videofile.isNotEmpty) _buildVideoButton(),
+                SizedBox(
+                  width: 25,
                 ),
                 if (widget.chartMode != 2) _buildSelectMeasButton(),
                 SizedBox(
@@ -289,7 +320,6 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
 
   Widget _buildChart(size, users) {
     return Container(
-      // height: widget.isSmall ? 370 : 730,
       height: size,
       child: Row(
         children: [
@@ -325,6 +355,12 @@ class _ChartWithStatisticsState extends State<ChartWithStatistics> {
         }
         break;
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (_controller != null) _controller.dispose();
   }
 
   @override

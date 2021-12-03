@@ -44,7 +44,7 @@ class UsersProvider with ChangeNotifier {
         Functions.convertIntToBytes(_selectedUser.feedbackType) +
         Functions.convertIntToBytes(_selectedUser.isAIon) +
         Functions.convertIntToBytes(_selectedUser.isAngleCorrected) +
-        Functions.convertIntToBytes(80) +
+        Functions.convertIntToBytes(60) +
         Functions.convertIntToBytes(8) +
         Functions.convertIntToBytes(_selectedUser.ledSimpleAssistanceColor) +
         Functions.convertIntToBytes(_selectedUser.ledTipAssistanceColor) +

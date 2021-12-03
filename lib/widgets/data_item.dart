@@ -32,6 +32,12 @@ class DataItem extends StatelessWidget {
             width: 225,
             alignment: Alignment.center,
             child: Text(data.timestamp)),
+        Container(
+            width: 110,
+            alignment: Alignment.center,
+            child: data.videofile.isNotEmpty
+                ? Icon(Icons.video_library)
+                : Container()),
       ],
     );
   }

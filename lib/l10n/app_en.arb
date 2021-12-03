@@ -143,5 +143,6 @@
     "limitYScaleTo1000": "Limit y scale to 1000",
     "removeLimitYScale": "Remove y scale limit",
     "quit": "Quit",
+    "quitQ": "Are you sure you want to quit?",
     "allCharts": "All Charts"
 }
